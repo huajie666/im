@@ -105,7 +105,7 @@ export default {
       unreadLoading: false,
       loadMoreLoading: false,
       options: {
-        target: this.api.uploading, // 文件上传地址
+        target: this.uploadingApi, // 文件上传地址
         testChunks: false, //是否开启服务器分片校验
         singleFile: true, //单文件上传
         allowDuplicateUploads: true, //是否可以继续上传同一个文件
@@ -149,8 +149,9 @@ export default {
     currentSessionId: {
       type: String
     },
-    api: {
-      type: Object
+    uploadingApi: {
+      type: String,
+      default: 'api/storage/file'
     }
   },
   methods: {

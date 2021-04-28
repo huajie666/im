@@ -4,11 +4,11 @@
       <session-header :isSession="isSession" :isShowGroupMembers="isShowGroupMembers" @changeKeyword="changeKeyword" @changeSessionPage="changeSessionPage" @closeSession="closeSession"></session-header>
       <div v-show="isSession">
         <session-list :keyword="keyword" :currentSessionId="currentSessionId" :sessionList="sessionList" :onlineEmployees="onlineEmployees" @chat="chat" @stick="stick"></session-list>
-        <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :api="api" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @sendMessage="sendMessage" @previewImg="previewImg"></session-message>
-        <group-members v-show="isShowGroupMembers" :isShowGroupMembers="isShowGroupMembers" :groupMembers="groupMembers" :onlineEmployees="onlineEmployees"  :userCode="userCode" :http="http" :api="api" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat"></group-members>
+        <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :uploadingApi="uploadingApi" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @sendMessage="sendMessage" @previewImg="previewImg"></session-message>
+        <group-members v-show="isShowGroupMembers" :isShowGroupMembers="isShowGroupMembers" :groupMembers="groupMembers" :onlineEmployees="onlineEmployees"  :userCode="userCode" :http="http" :groupMemberInfoApi="groupMemberInfoApi" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat"></group-members>
       </div>
       <div v-show="!isSession">
-        <address-book ref="addressBook" :userCode="userCode" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :api="api" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat" />
+        <address-book ref="addressBook" :userCode="userCode" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :groupInfoApi="groupInfoApi" :groupMemberInfoApi="groupMemberInfoApi" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat" />
         <div class="yc-info" v-if="isShowInfo">
           <group-info ref="groupInfo" v-if="isGroupInfo" :groupInfo="groupInfo" @changeGroupInfo="changeGroupInfo" @hiddenInfo="hiddenInfo" @delEmployee="delEmployee" @saveGroup="saveGroup" @delGroup="delGroup" />
           <employee-info v-else :employeeInfo="employeeInfo" :userCode="userCode" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat"></employee-info>  
@@ -56,9 +56,54 @@ export default {
       type: String,
       default: document.cookie.substring(6)
     },
-    api: {
-      type: Object
-    }
+    sessionListApi: {
+      type: String,
+      default: 'api/manage/im/session/search'
+    },
+    messageListApi: {
+      type: String,
+      default: 'api/im/message/search/offline/message'
+    },
+    groupMembersApi: {
+      type: String,
+      default: 'api/manage/im/group/info/selectGroupInfo'
+    },
+    groupMemberInfoApi: {
+      type: String,
+      default: 'api/employee/searchContactsInfos'
+    },
+    groupApi: {
+      type: String,
+      default: 'api/manage/im/group/info/listGroups'
+    },
+    groupInfoApi: {
+      type: String,
+      default: 'api/manage/im/group/info/selectGroupInfo'
+    },
+    contactsApi: {
+      type: String,
+      default: 'api/employee/group/list'
+    },
+    addGroupApi: {
+      type: String,
+      default: 'api/manage/im/group/info/save'
+    },
+    editGroupApi: {
+      type: String,
+      default: 'api/manage/im/group/info/update'
+    },
+    delGroupApi: {
+      type: String,
+      default: 'api/manage/im/group/info/delete'
+    },
+    stickApi: {
+      type: String,
+      default: 'api/im/session/topping'
+    },
+    uploadingApi: {
+      type: String,
+      default: 'api/storage/file'
+    },
   },
   data() {
     return {
@@ -137,7 +182,7 @@ export default {
             employeeCode: this.userCode,
             sessionId: val,
           }
-          this.http.post(this.api.messageList,data).then(res=>{
+          this.http.post(this.messageListApi,data).then(res=>{
             this.messageList = res.data.data.messageList
             this.lastPageNum = res.data.data.lastPageNum
             this.unreadNum = res.data.data.omCount
@@ -400,7 +445,7 @@ export default {
                 sessionType: type,
                 chatTarget: chatTarget
               }
-              this.http.post(this.api.sessionList,params).then(res=>{
+              this.http.post(this.sessionListApi,params).then(res=>{
                 this.sessionList = res.data.data
                 if(data.type === 'PRIVATE'){
                   this.employeesObj[data.from] = data.fromName
@@ -470,7 +515,7 @@ export default {
         searchType: "0",
         employeeCode: this.userCode
       }
-      this.http.post(this.api.sessionList,data).then(res=>{
+      this.http.post(this.sessionListApi,data).then(res=>{
         this.sessionList = res.data.data
         this.employeesObj[this.userCode] = this.userName
         this.sessionList.forEach(item =>{
@@ -482,7 +527,7 @@ export default {
     },
     // 获取群成员列表
     getGroupMembers(id) {
-      this.http.get(`${this.api.groupMembers}/${id}`).then(res=>{
+      this.http.get(`${this.groupMembersApi}/${id}`).then(res=>{
         this.groupMembers = res.data.data.employeeList
         this.groupMembers.forEach(item => {
           this.employeesObj[item.employeeCode] = item.employeeName
@@ -530,7 +575,7 @@ export default {
           chatTarget: obj.code,
           sessionType: obj.type
         }
-        this.http.post(this.api.sessionList,data).then(res=>{
+        this.http.post(this.sessionListApi,data).then(res=>{
           this.sessionList = res.data.data
           if(obj.type === 1) {
             this.employeesObj[obj.code] = obj.name
@@ -558,7 +603,7 @@ export default {
       }
       let chatArea = document.getElementsByClassName("yc-content") //聊天区域
       let chatAreaScrollHeight = chatArea[0].scrollHeight
-      this.http.post(this.api.messageList,data).then(res=>{
+      this.http.post(this.messageListApi,data).then(res=>{
         this.lastPageNum = res.data.data.lastPageNum
         this.unreadNum = res.data.data.omCount
         this.localInfo[this.currentSessionId] = {
@@ -639,13 +684,13 @@ export default {
     },
     // 获取群列表
     getGroup() {
-      this.http.get(this.api.group).then(res=>{
+      this.http.get(this.groupApi).then(res=>{
         this.$refs.addressBook.groupList = res.data.data
       })
     },
     // 获取联系人列表
     getContacts() {
-      this.http.get(this.api.contacts).then(res=>{
+      this.http.get(this.contactsApi).then(res=>{
         res.data.data.forEach(item => {
           item.isOpened = false
         })
@@ -677,7 +722,7 @@ export default {
         memberTotal: this.groupInfo.members.length
       }
       if(this.groupInfo.isAdd) {
-        this.http.post(this.api.addGroup,data).then(res=>{
+        this.http.post(this.addGroupApi,data).then(res=>{
           this.getGroup()
           this.groupInfo.isEdit = false
           this.$refs.groupInfo.saveLoading = false
@@ -688,7 +733,7 @@ export default {
         })
       } else {
         data.id = this.$refs.addressBook.selectId
-        this.http.post(this.api.editGroup,data).then(res=>{
+        this.http.post(this.editGroupApi,data).then(res=>{
           this.getGroup()
           this.groupInfo.isEdit = false
           this.$refs.groupInfo.saveLoading = false
@@ -700,7 +745,7 @@ export default {
     },
     // 删除群
     delGroup() {
-      this.http.delete(`${this.api.delGroup}/${this.$refs.addressBook.selectId}`).then(res=> {
+      this.http.delete(`${this.delGroupApi}/${this.$refs.addressBook.selectId}`).then(res=> {
         this.getGroup()
         this.$refs.addressBook.selectId = ''
         this.$refs.groupInfo.delLoading = false
@@ -832,7 +877,7 @@ export default {
         sessionId: this.stickId,
         employeeCode: this.userCode
       }
-      this.http.post(this.api.stick,data).then(res=>{
+      this.http.post(this.stickApi,data).then(res=>{
         this.getSessionList()
       })
     },
@@ -867,7 +912,8 @@ export default {
     transform: translate(-50%); 
     border-radius: 4px;
     box-shadow: 5px 5px 10px rgb(0 0 0 / 30%);
-    z-index: 8888;
+    background-color: #fff;
+    z-index: 2000;
     .yc-info {
       position: absolute;
       width: calc(100% - 200px);
@@ -885,7 +931,7 @@ export default {
     font-size: 12px;
     font-weight: 400;
     color: #000;
-    z-index: 9999;
+    z-index: 3000;
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
     li {
       cursor: pointer;

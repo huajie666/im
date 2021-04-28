@@ -60,9 +60,10 @@ export default {
       type: String
     },
     http: {},
-    api: {
-      type: Object
-    }
+    groupMemberInfoApi: {
+      type: String,
+      default: 'api/employee/searchContactsInfos'
+    },
   },
   computed: {
     filterGroupMembers() {
@@ -78,7 +79,7 @@ export default {
     viewInfo(item) {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.http.get(`${this.api.groupMemberInfo}/${item.employeeCode}`).then(res=>{
+        this.http.get(`${this.groupMemberInfoApi}/${item.employeeCode}`).then(res=>{
           this.memberInfo = res.data.data
         })
       }, 300)

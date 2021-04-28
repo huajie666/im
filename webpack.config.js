@@ -52,6 +52,17 @@ module.exports = {
         ],
       },
       {
+        test: /\.(svg|ttf|eot|woff|woff2)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 999999999,
+            },
+          },
+        ],
+      },
+      {
         test: /\.less$/i,
         loader: "less-loader", // 将 Less 文件编译为 CSS 文件
       },
