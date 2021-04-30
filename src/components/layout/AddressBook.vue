@@ -62,13 +62,17 @@ export default {
       type: String
     },
     http: {},
+    requestProxy: {
+      type: String,
+      default : 'api/'
+    },
     groupInfoApi: {
       type: String,
-      default: 'api/manage/im/group/info/selectGroupInfo'
+      default: 'manage/im/group/info/selectGroupInfo'
     },
     groupMemberInfoApi: {
       type: String,
-      default: 'api/employee/searchContactsInfos'
+      default: 'employee/searchContactsInfos'
     },
   },
   computed: {
@@ -124,7 +128,7 @@ export default {
       clearTimeout(this.timer)
       this.timer = setTimeout(()=>{
         this.selectId = id
-        this.http.get(`${this.groupInfoApi}/${id}`).then(res=>{
+        this.http.get(`${this.requestProxy}${this.groupInfoApi}/${id}`).then(res=>{
           let data = {
             isAdd: false, //是否添加群状态
             isEdit: false, //是否编辑群状态
@@ -163,7 +167,7 @@ export default {
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
           this.selectId = obj.id
-          this.http.get(`${this.groupMemberInfoApi}/${obj.employeeCode}`).then(res=>{
+          this.http.get(`${this.requestProxy}${this.groupMemberInfoApi}/${obj.employeeCode}`).then(res=>{
             this.$emit('changeEmployeeInfo',res.data.data)
           })
         }, 300)

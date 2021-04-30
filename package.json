@@ -1,7 +1,7 @@
 {
   "name": "yc-im",
   "description": "A Vue.js project",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "huajie666 <wxs041015@163.com>",
   "license": "MIT",
   "private": false,
@@ -39,8 +39,5 @@
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1"
   },
-  "main": "dist/IM.js",
-  "publishConfig": {
-    "registry": "http://192.168.101.145:9081/repository/local-npm/"
-  }
+  "main": "dist/IM.js"
 }

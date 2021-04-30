@@ -60,9 +60,13 @@ export default {
       type: String
     },
     http: {},
+    requestProxy: {
+      type: String,
+      default : 'api/'
+    },
     groupMemberInfoApi: {
       type: String,
-      default: 'api/employee/searchContactsInfos'
+      default: 'employee/searchContactsInfos'
     },
   },
   computed: {
@@ -79,7 +83,7 @@ export default {
     viewInfo(item) {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.http.get(`${this.groupMemberInfoApi}/${item.employeeCode}`).then(res=>{
+        this.http.get(`${this.requestProxy}${this.groupMemberInfoApi}/${item.employeeCode}`).then(res=>{
           this.memberInfo = res.data.data
         })
       }, 300)
