@@ -80,8 +80,12 @@ module.exports = {
     overlay: true,
     proxy: {
       '/api': {
-        target: 'http://192.168.101.69:8081/',
+        // target: 'http://192.168.101.69:8081/',
+        target: 'http://192.168.101.27:8082/',
         changeOrinin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
       } 
     }
   },

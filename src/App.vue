@@ -14,7 +14,7 @@ export default {
       userCode: '98F19003',
       userName: '王晓赛',
       requestProxy:'api/',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYxOTUwMzA3NTU1MiwiZXhwIjoxNjIwMTA3ODc1fQ.cVziFxKjKzePIkUudmRil_oKnezZXX1kibQuBHJABf3khgsdP1-F7ouw14N6P1tLKlOzMz_on40IV1Mk1dLXLg',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyMDQ0Mjk4MTY4NCwiZXhwIjoxNjIxMDQ3NzgxfQ.yA8BBw2nO6reTZGv3v6-AvN-PUx9aZnt_GCd3DSCnsG6u16RudFhaqXrMYT53WXGrMaJh5LnUF1SVJKLUTQVTw',
       sessionList: 'manage/im/session/search',
       messageListApi: 'im/message/search/offline/message',
     }

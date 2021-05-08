@@ -691,9 +691,6 @@ export default {
     // 获取联系人列表
     getContacts() {
       this.http.get(this.requestProxy + this.contactsApi).then(res=>{
-        res.data.data.forEach(item => {
-          item.isOpened = false
-        })
         this.$refs.addressBook.contactsList = res.data.data
       })
     },
@@ -705,12 +702,6 @@ export default {
     },
      // 编辑群保存
     saveGroup() {
-      for(let item of this.$refs.addressBook.groupList) {
-        if(item.groupName === this.groupInfo.name && item.id !== this.groupInfo.id) {
-          this.$message.warning("群名称已存在")
-          return
-        }
-      }
       this.$refs.groupInfo.saveLoading = true
       let employees = []
       this.groupInfo.members.forEach(item=>{
@@ -766,10 +757,15 @@ export default {
       this.groupInfo.members.forEach(item=>{
         employees.push(item.employeeCode)
       })
-      if(employees.includes(obj.employeeCode)) {
+      if(employees.includes(obj.code)) {
         this.$message.warning('请勿重复添加')
       } else {
-        this.groupInfo.members.push(obj)
+        let data = {
+          employeeCode: obj.code,
+          employeeName: obj.name,
+          companyName: obj.companyShortName
+        }
+        this.groupInfo.members.push(data)
       }
     },
     // 删除群成员
