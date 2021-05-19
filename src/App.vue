@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <div class="but-control">
+      <el-button @click="isOpen = true">打开窗口</el-button>
+      <el-button @click="isOpen = false">关闭窗口</el-button>
+    </div>
     <i-m :isOpen="isOpen" :wsurl="wsurl" :userCode="userCode" :userName="userName" :token="token" :sessionListApi="sessionList" :messageListApi="messageListApi" @closeSession="closeSession" />
   </div>
 </template>
@@ -9,12 +13,12 @@ export default {
   name: 'app',
   data() {
     return {
-      isOpen: true,
+      isOpen: false,
       wsurl: 'ws://192.168.101.69:8081/chat/98F19003?DEVICE=WEB',
       userCode: '98F19003',
       userName: '王晓赛',
       requestProxy:'api/',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyMDQ0Mjk4MTY4NCwiZXhwIjoxNjIxMDQ3NzgxfQ.yA8BBw2nO6reTZGv3v6-AvN-PUx9aZnt_GCd3DSCnsG6u16RudFhaqXrMYT53WXGrMaJh5LnUF1SVJKLUTQVTw',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyMTQxNDIyNzk3MCwiZXhwIjoxNjIyMDE5MDI3fQ.fVk-F1cJstjuhQ8hawrl-bQCxZYS174ulb76z7bVigifK9J6eXDsW2CLxGLJxd00GhrHE9bRWhz8Iw4r4f7SnA',
       sessionList: 'manage/im/session/search',
       messageListApi: 'im/message/search/offline/message',
     }
@@ -26,4 +30,11 @@ export default {
   }
 }
 </script>
+
+<style >
+.but-control{
+  text-align: center;
+  padding: 10px  0;
+}
+</style>
 
