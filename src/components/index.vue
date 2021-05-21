@@ -238,7 +238,7 @@ export default {
     },
     // 连接成功
     websocketonopen() {
-      // console.log('连接成功')
+      console.log('---连接成功')
     },
     // 接收到的推送消息
     websocketonmessage(e) {

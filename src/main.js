@@ -9,7 +9,7 @@ import 'viewerjs/dist/viewer.css'
 import App from './App.vue'
 import IMPlugin from './index'
 import './assets/index.css'
-import './../static/icon/iconfont.css'
+import './assets/icon/iconfont.css'
 import './utils/directive'
 Vue.use(VueAxios, axios)
 Vue.use(ElementUI)
