@@ -1,6 +1,6 @@
 import Vue from "vue"
 // 拖拽效果
-Vue.directive('drag', function (el) {
+Vue.directive('im-drag', function (el) {
   let oDiv = el
   let dragPart = oDiv.children[0]
   dragPart.onmousedown = (e) => {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="yc-IM" v-drag v-show="isOpen">
+    <div class="yc-IM" v-im-drag v-show="isOpen">
       <session-header :isSession="isSession" :isShowGroupMembers="isShowGroupMembers" @changeKeyword="changeKeyword" @changeSessionPage="changeSessionPage" @closeSession="closeSession"></session-header>
       <div v-show="isSession">
         <session-list :keyword="keyword" :currentSessionId="currentSessionId" :sessionList="sessionList" :onlineEmployees="onlineEmployees" @chat="chat" @stick="stick"></session-list>
@@ -96,6 +96,43 @@ export default {
       type: String,
       default: 'storage/file'
     },
+  },
+  directives: {
+    'im-drag': {
+      bind(el) {
+        let oDiv = el
+        let dragPart = oDiv.children[0]
+        dragPart.onmousedown = (e) => {
+          //算出鼠标相对元素的位置
+          let disX = e.clientX - oDiv.offsetLeft
+          let disY = e.clientY - oDiv.offsetTop
+          document.onmousemove = (e) => {
+            //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
+            let left = e.clientX - disX
+            let top = e.clientY - disY
+            if (top < 0) {
+              top = 0
+            }
+            if (top > document.body.clientHeight - 55) {
+              top = top > document.body.clientHeight - 55
+            }
+            if (left < -100) {
+              left = -100
+            }
+            if (left > document.body.clientWidth + 100) {
+              left = document.body.clientWidth + 100
+            }
+            //移动当前元素
+            oDiv.style.left = left + 'px'
+            oDiv.style.top = top + 'px'
+          }
+          document.onmouseup = () => {
+            document.onmousemove = null
+            document.onmouseup = null
+          }
+        }
+      }
+    }
   },
   data() {
     return {

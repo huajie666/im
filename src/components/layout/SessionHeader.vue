@@ -1,9 +1,9 @@
 <template>
   <div class="yc-header" :style="{width:headerWidth}">
-    <input type="text" v-model="keyword" v-stopDrag>
-    <i class="im-iconfont im-icon-sms yc-sms" :class="{active: isSession}" v-stopDrag @click="changePage(true)"/>
-    <i class="im-iconfont im-icon-tongxunlu yc-tongxunlu" :class="{active: !isSession}" v-stopDrag @click="changePage(false)"/>
-    <i class="im-iconfont im-icon-delete yc-delete" v-stopDrag @click="close"/>
+    <input type="text" v-model="keyword" v-stop-im-drag>
+    <i class="im-iconfont im-icon-sms yc-sms" :class="{active: isSession}" v-stop-im-drag @click="changePage(true)"/>
+    <i class="im-iconfont im-icon-tongxunlu yc-tongxunlu" :class="{active: !isSession}" v-stop-im-drag @click="changePage(false)"/>
+    <i class="im-iconfont im-icon-delete yc-delete" v-stop-im-drag @click="close"/>
   </div>
 </template>
 
@@ -21,6 +21,16 @@ export default {
     },
     isShowGroupMembers: {
       type: Boolean
+    }
+  },
+  directives: {
+    'stop-im-drag': {
+      bind(el) {
+        let element = el
+        element.onmousedown = function (e) {
+          e.stopPropagation()
+        }
+      }
     }
   },
   watch: {

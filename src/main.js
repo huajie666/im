@@ -10,7 +10,7 @@ import App from './App.vue'
 import IMPlugin from './index'
 import './assets/index.css'
 import './assets/icon/iconfont.css'
-import './utils/directive'
+// import './utils/directive'
 Vue.use(VueAxios, axios)
 Vue.use(ElementUI)
 Vue.use(uploader)
