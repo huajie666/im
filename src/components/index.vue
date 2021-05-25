@@ -4,8 +4,8 @@
       <session-header :isSession="isSession" :isShowGroupMembers="isShowGroupMembers" @changeKeyword="changeKeyword" @changeSessionPage="changeSessionPage" @closeSession="closeSession"></session-header>
       <div v-show="isSession">
         <session-list :keyword="keyword" :currentSessionId="currentSessionId" :sessionList="sessionList" :onlineEmployees="onlineEmployees" @chat="chat" @stick="stick"></session-list>
-        <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :requestProxy="requestProxy" :uploadingApi="uploadingApi" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @sendMessage="sendMessage" @previewImg="previewImg"></session-message>
-        <group-members v-show="isShowGroupMembers" :isShowGroupMembers="isShowGroupMembers" :groupMembers="groupMembers" :onlineEmployees="onlineEmployees"  :userCode="userCode" :http="http" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat"></group-members>
+        <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :requestProxy="requestProxy" :uploadingApi="uploadingApi" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @sendMessage="sendMessage" @previewImg="previewImg" @createGroup="createGroup"></session-message>
+        <group-members v-show="isShowGroupMembers" :isShowGroupMembers="isShowGroupMembers" :groupMembers="groupMembers" :onlineEmployees="onlineEmployees" :userCode="userCode" :http="http" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat"></group-members>
       </div>
       <div v-show="!isSession">
         <address-book ref="addressBook" :userCode="userCode" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :groupInfoApi="groupInfoApi" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat" />
@@ -43,19 +43,11 @@ export default {
       type: Boolean,
       default: false
     },
-    wsurl: {
-      type: String
-    },
-    userCode: {
-      type: String
-    },
-    userName: {
-      type: String
-    },
-    token: {
-      type: String,
-      default: document.cookie.substring(6)
-    },
+    wsurl: String,
+    userCode: String,
+    userName: String,
+    userCompany: String,
+    token: String,
     requestProxy: {
       type: String,
       default: 'api/'
@@ -150,7 +142,7 @@ export default {
   mounted() {
     // 创建axios实例
     this.http = axios.create({
-      timeout: 5000
+      timeout: 12000
     })
     //  拦截添加token
     this.http.interceptors.request.use(
@@ -243,7 +235,7 @@ export default {
     // 接收到的推送消息
     websocketonmessage(e) {
       let data = JSON.parse(e.data)
-      // console.log(data,'接收消息')
+      console.log(data,'接收消息')
       // 后台推送断开消息，不需要重连
       if(data.RepetitionLoggingIn) {
         this.isReconnect = false
@@ -273,6 +265,11 @@ export default {
       // 关联群变化
       if(data.type === 'GROUP_UPDATE_STATUS') {
         this.getGroup()
+        return
+      }
+      // 刷新会话列表
+      if(data.type === 'ACTION_RENEW_SESSION_LIST') {
+        this.getSessionList()
         return
       }
       if(data.sessionId) {
@@ -682,15 +679,27 @@ export default {
       let chatArea = document.getElementsByClassName("yc-content") //聊天区域
       chatArea[0].scrollTop = chatArea[0].scrollHeight
     },
+    //添加联系层级
+    addIndex(data,index) {
+      data.forEach(item=>{
+        item.index = index
+        if(item.hasChild) {
+          let newIndex = item.index + 1
+          this.addIndex(item.children,newIndex)
+        }
+      })
+    },
     // 获取群列表
     getGroup() {
       this.http.get(this.requestProxy + this.groupApi).then(res=>{
+        this.addIndex(res.data.data,1)
         this.$refs.addressBook.groupList = res.data.data
       })
     },
     // 获取联系人列表
     getContacts() {
       this.http.get(this.requestProxy + this.contactsApi).then(res=>{
+        this.addIndex(res.data.data,1)
         this.$refs.addressBook.contactsList = res.data.data
       })
     },
@@ -893,6 +902,25 @@ export default {
         })
         this.viewer.show()
       })
+    },
+    // 私聊窗口创建群
+    createGroup() {
+      this.isSession = false
+      this.$refs.sessionMessage.selectId = ''
+      let data = {
+        isAdd: true,
+        isEdit: true,
+        id: '',
+        name: `${this.userName},${this.currentInfo.sessionName}`,
+        members: [{
+          companyName: this.userCompany, employeeCode: this.userCode, employeeName: this.userName
+        },{
+          companyName: this.currentInfo.company, employeeCode: this.currentInfo.chatTarget, employeeName: this.currentInfo.sessionName
+        }],
+        initName: '',
+        initMembers: []
+      }
+      this.changeGroupInfo(data)
     }
   }
 }

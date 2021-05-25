@@ -18,7 +18,7 @@
             </ul>
           </div>
           <span slot="reference" class="yc-popover">
-            <span class="iconfont icon-yuangong yc-yuangong" :class="{active:onlineEmployees.includes(item.employeeCode)}"></span>
+            <span class="im-iconfont im-icon-yuangong yc-yuangong" :class="{active:onlineEmployees.includes(item.employeeCode)}"></span>
             {{ item.employeeName }}
           </span>
         </el-popover>

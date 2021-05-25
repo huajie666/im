@@ -34,14 +34,14 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(png|jpg|gif|svg|ttf|eot|woff|woff2)$/,
+        test: /\.(svg|ttf|eot|woff|woff2)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]?[hash]'
         }
       },
       {
-        test: /\.(png|jpg|gif|svg|ttf|eot|woff|woff2)$/i,
+        test: /\.(svg|ttf|eot|woff|woff2)$/i,
         use: [
           {
             loader: 'url-loader',
@@ -70,12 +70,13 @@ module.exports = {
     proxy: {
       '/api': {
         // target: 'http://192.168.101.69:8081/',
-        target: 'http://192.168.101.27:8082/',
+        // target: 'http://192.168.101.27:8082/',
+        target: 'http://192.168.101.27:8081/',
+        // target: 'http://192.168.101.40:8082/',
+        loglevel: 'debug',
         changeOrinin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      } 
+        pathRewrite: { '^/api': '/api' }
+      },
     }
   },
   performance: {

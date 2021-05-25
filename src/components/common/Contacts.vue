@@ -1,13 +1,13 @@
 <template>
   <div>
     <div v-for="item of treeData" :key="item.id">
-      <div class="cs-item" v-if="item.hasChild" @click="item.expand = !item.expand">
-        <i class="yc-company-icon iconfont icon-qiye" />
+      <div class="cs-item" :style="{paddingLeft: item.index*10+'px'}" v-if="item.hasChild" @click="item.expand = !item.expand">
+        <i class="yc-company-icon im-iconfont im-icon-qiye" />
         <span>{{item.name}}</span>
-        <i class="yc-down-arrow iconfont icon-jiantou" :class="{roteate: item.expand}" />
+        <i class="yc-down-arrow im-iconfont im-icon-arrow-bottom" :class="{roteate: item.expand}" />
       </div>
-      <div class="cs-item" v-else @click="viewInfo(item)" @dblclick="openSession(item)">
-        <i class="yc-contacts-icon iconfont icon-yuangong" :class="{active: item.nodeType === 'LEAF' && onlineEmployees.includes(item.code)}" />
+      <div class="cs-item" :style="{paddingLeft: item.index*10+'px'}" v-else @click="viewInfo(item)" @dblclick="openSession(item)">
+        <i class="yc-contacts-icon im-iconfont im-icon-yuangong" :class="{active: item.nodeType === 'LEAF' && onlineEmployees.includes(item.code)}" />
         <span :class="{active: selectId===item.id}">{{item.name}}</span>
       </div>
       <ul v-show="item.expand">

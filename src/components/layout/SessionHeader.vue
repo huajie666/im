@@ -1,9 +1,9 @@
 <template>
   <div class="yc-header" :style="{width:headerWidth}">
     <input type="text" v-model="keyword" v-stopDrag>
-    <i class="iconfont icon-icon-sms yc-sms" :class="{active: isSession}" v-stopDrag @click="changePage(true)"/>
-    <i class="iconfont icon-tongxunlu yc-tongxunlu" :class="{active: !isSession}" v-stopDrag @click="changePage(false)"/>
-    <i class="iconfont icon-delete yc-delete" v-stopDrag @click="close"/>
+    <i class="im-iconfont im-icon-sms yc-sms" :class="{active: isSession}" v-stopDrag @click="changePage(true)"/>
+    <i class="im-iconfont im-icon-tongxunlu yc-tongxunlu" :class="{active: !isSession}" v-stopDrag @click="changePage(false)"/>
+    <i class="im-iconfont im-icon-delete yc-delete" v-stopDrag @click="close"/>
   </div>
 </template>
 
@@ -62,8 +62,10 @@ export default {
       top: 12px;
       width: 180px;
       height: 28px;
+      padding: 0 5px;
       outline:none;
       border : none;
+      box-sizing: border-box;
     }
     i {
       color: #ccc;

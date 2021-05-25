@@ -4,7 +4,7 @@
       <span class="yc-triangle" v-show="item.toppingDate" />
       <span class="yc-head" :class="{active:onlineEmployees.includes(item.chatTarget) || item.sessionType === 2}">
         <span v-if="item.sessionType ===1">{{hiddenSurname(item.sessionName)}}</span>
-        <i v-else class="iconfont icon-qun" />
+        <i v-else class="im-iconfont im-icon-qun" />
       </span>
       <span class="yc-name">
         {{item.sessionName}}

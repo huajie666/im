@@ -11,7 +11,7 @@
     <ul class="yc-content">
       <li class="yc-employee" v-for="item of groupInfo.members" :key="item.employeeCode">
         <span>{{item.employeeName}}</span>
-        <i class="yc-delete-icon iconfont icon-delete" v-show="groupInfo.isEdit" @click="delEmployee(item)" />
+        <i class="yc-delete-icon im-iconfont im-icon-delete" v-show="groupInfo.isEdit" @click="delEmployee(item)" />
       </li>
     </ul>
     <div class="yc-bottom">

@@ -2,7 +2,11 @@
   <div class="yc-session">
     <div class="yc-title">
       <span>{{ currentInfo.sessionName }}</span>
-      <span v-if="currentInfo.company">({{ currentInfo.company }})</span>
+      <span v-if="currentInfo.company">
+        <span>({{ currentInfo.company }})</span>
+        <i class="im-iconfont im-icon-tianjia fr" @click="createGroup"></i>
+        <i class="im-iconfont im-icon-yijiao fr"></i>
+      </span>
       <span v-else class="yc-group" @click="viewGroupMembers">查看群成员</span>
     </div>
     <ul class="yc-content" @scroll="scrollEvent">
@@ -28,11 +32,11 @@
               <img :src="item.content.file.imgUrl" alt @click="previewImg(item.content.file.url)">
             </span>
             <span v-else>
-              <i class="iconfont icon-wenjian2 file-icon"></i>
+              <i class="im-iconfont im-icon-wenjian file-icon"></i>
               <div class="yc-file">
                 <p>{{item.content.file.name }}</p>
                 <p style="padding-top:3px">{{item.content.file.smartSize}}
-                  <i class="iconfont icon-xiazai2 yc-xiazai" @click="download(item)" />
+                  <i class="im-iconfont im-icon-xiazai yc-xiazai" @click="download(item)" />
                 </p>
               </div>
             </span>
@@ -55,11 +59,11 @@
               <img :src="item.content.file.imgUrl" alt @click="previewImg(item.content.file.url)">
             </span>  
             <span class="yc-info info-fr" v-else>
-              <i class="iconfont icon-wenjian2 file-icon"></i>
+              <i class="im-iconfont im-icon-wenjian file-icon"></i>
               <div class="yc-file">
                 <p>{{item.content.file.name }}</p>
                 <p style="padding-top:3px">{{item.content.file.smartSize}}
-                  <i class="iconfont icon-xiazai2 yc-xiazai" @click="download(item)" />
+                  <i class="im-iconfont im-icon-xiazai yc-xiazai" @click="download(item)" />
                 </p>
               </div>
             </span>
@@ -73,7 +77,7 @@
         <li class="yc-operation">
           <uploader :options="options" @file-added="fileAdded" @file-success="fileSuccess" @file-error="fileFailed">
             <uploader-btn :attrs="attrs">
-              <span class="iconfont icon-wenjian2 yc-icon"></span>
+              <span class="im-iconfont im-icon-wenjian yc-icon"></span>
             </uploader-btn>
             <uploader-list v-show="isShowProgressBar"></uploader-list>
           </uploader>
@@ -239,6 +243,10 @@ export default {
     },
     previewImg(url) {
       this.$emit('previewImg',url)
+    },
+    // 创建群
+    createGroup() {
+      this.$emit('createGroup')
     }
   }
 }
@@ -266,6 +274,10 @@ export default {
         font-weight: normal;
         color: #18e;
         cursor: pointer;
+      }
+      i {
+        margin-right: 10px;
+        cursor: pointer
       }
     }
     .yc-content {
@@ -431,7 +443,7 @@ export default {
       }
       .yc-send-but {
         float: right;
-        height: 22px;
+        height: 20px;
         font-size: 12px;
         padding: 0 8px;
         margin-right: 10px;

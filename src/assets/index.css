@@ -16,6 +16,9 @@ pre {
 ul {
   list-style: none;
 }
+.fr {
+  float: right;
+}
 .clearfix:after {
   content: '';
   display: block;
