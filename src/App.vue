@@ -14,11 +14,11 @@ export default {
   data() {
     return {
       isOpen: true,
-      wsurl: 'ws://192.168.101.69:8081/chat/98F19003?DEVICE=WEB',
+      wsurl: 'ws://192.168.101.27:8081/chat/98F19003?DEVICE=WEB',
       userCode: '98F19003',
       userName: '王晓赛',
       userCompany: '石家庄',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyMTQxNDIyNzk3MCwiZXhwIjoxNjIyMDE5MDI3fQ.fVk-F1cJstjuhQ8hawrl-bQCxZYS174ulb76z7bVigifK9J6eXDsW2CLxGLJxd00GhrHE9bRWhz8Iw4r4f7SnA',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyMjAyNDQ2MTM5MiwiZXhwIjoxNjIyNjI5MjYxfQ.OIl67C-4w30cJtfP8m0RP-YuJM-PUaxvGcBRJ7_Ryh_VXOX-rSOBpr4bmq5ZD34gU9iJ-NYFMUT2IYcci-IfGA',
       requestProxy:'api/',
       sessionList: 'manage/im/session/search',
       messageListApi: 'im/message/search/offline/message',

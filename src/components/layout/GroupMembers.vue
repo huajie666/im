@@ -119,7 +119,7 @@ export default {
     border-left: 1px solid #cccccc;
   }
   .unfoldHeader {
-    width: 150px;
+    width: 200px;
     box-shadow: 5px 5px 10px rgb(0 0 0 / 30%);
     background-color: #ffffff;
   }
@@ -131,7 +131,7 @@ export default {
     position: absolute;
     top: 12px;
     left: 8px;
-    width: 130px;
+    width: 160px;
   }
   .yc-number {
     font-size: 14px;

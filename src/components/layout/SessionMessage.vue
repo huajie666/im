@@ -5,7 +5,7 @@
       <span v-if="currentInfo.company">
         <span>({{ currentInfo.company }})</span>
         <i class="im-iconfont im-icon-tianjia fr" @click="createGroup"></i>
-        <i class="im-iconfont im-icon-yijiao fr"></i>
+        <i class="im-iconfont im-icon-yijiao fr" @click="unfoldTurnOver"></i>
       </span>
       <span v-else class="yc-group" @click="viewGroupMembers">查看群成员</span>
     </div>
@@ -165,6 +165,9 @@ export default {
   methods: {
     viewGroupMembers() {
       this.$emit('viewGroupMembers')
+    },
+    unfoldTurnOver() {
+      this.$emit('unfoldTurnOver')
     },
     viewNewMessage() {
       this.$emit('viewNewMessage')

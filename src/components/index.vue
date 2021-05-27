@@ -1,11 +1,12 @@
 <template>
   <div>
     <div class="yc-IM" v-im-drag v-show="isOpen">
-      <session-header :isSession="isSession" :isShowGroupMembers="isShowGroupMembers" @changeKeyword="changeKeyword" @changeSessionPage="changeSessionPage" @closeSession="closeSession"></session-header>
+      <session-header :isSession="isSession" :isShowGroupMembers="isShowGroupMembers" :isShowGroupTurnOver="isShowGroupTurnOver" @changeKeyword="changeKeyword" @changeSessionPage="changeSessionPage" @closeSession="closeSession"></session-header>
       <div v-show="isSession">
         <session-list :keyword="keyword" :currentSessionId="currentSessionId" :sessionList="sessionList" :onlineEmployees="onlineEmployees" @chat="chat" @stick="stick"></session-list>
-        <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :requestProxy="requestProxy" :uploadingApi="uploadingApi" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @sendMessage="sendMessage" @previewImg="previewImg" @createGroup="createGroup"></session-message>
+        <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :requestProxy="requestProxy" :uploadingApi="uploadingApi" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @unfoldTurnOver="unfoldTurnOver" @sendMessage="sendMessage" @previewImg="previewImg" @createGroup="createGroup"></session-message>
         <group-members v-show="isShowGroupMembers" :isShowGroupMembers="isShowGroupMembers" :groupMembers="groupMembers" :onlineEmployees="onlineEmployees" :userCode="userCode" :http="http" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat"></group-members>
+        <turn-over ref="turnOver" v-show="isShowGroupTurnOver" :isShowGroupTurnOver="isShowGroupTurnOver" :userName="userName" :userCompany="userCompany" @turnOver="turnOver"></turn-over>
       </div>
       <div v-show="!isSession">
         <address-book ref="addressBook" :userCode="userCode" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :groupInfoApi="groupInfoApi" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat" />
@@ -36,6 +37,7 @@ import GroupMembers from './layout/GroupMembers'
 import AddressBook from './layout/AddressBook'
 import GroupInfo from './layout/GroupInfo'
 import EmployeeInfo from './layout/EmployeeInfo'
+import TurnOver from './layout/TurnOver'
 export default {
   name: 'IM',
   props: {
@@ -96,6 +98,10 @@ export default {
       type: String,
       default: 'storage/file'
     },
+    turnOverApi: {
+      type: String,
+      default: 'im/message/trunover'
+    }
   },
   directives: {
     'im-drag': {
@@ -157,6 +163,7 @@ export default {
       isReconnect: true, //是否需要重新连接
       groupMembers: [], //群成员列表
       isShowGroupMembers: false, //是否显示群成员列表
+      isShowGroupTurnOver: false, // 是否显示移交列表
       newNotify: null,
       stickWindow: false, //置顶弹窗
       stickId: '',
@@ -174,7 +181,8 @@ export default {
     GroupMembers,
     AddressBook,
     GroupInfo,
-    EmployeeInfo
+    EmployeeInfo,
+    TurnOver
   },
   mounted() {
     // 创建axios实例
@@ -197,6 +205,7 @@ export default {
     this.getSessionList()
     this.getGroup()
     this.getContacts()
+    this.getTurnOverContacts()
   },
   watch: {
     currentSessionId: {
@@ -574,6 +583,7 @@ export default {
         return
       }
       this.isShowGroupMembers = false
+      this.isShowGroupTurnOver = false
       this.currentInfo = {
         chatTarget: item.chatTarget,
         sessionName: item.sessionName,
@@ -587,6 +597,7 @@ export default {
     // 通讯录发起聊天
     initiateChat(obj) {
       this.isShowGroupMembers = false
+      this.isShowGroupTurnOver = false
       this.currentInfo = {
         chatTarget: obj.code,
         sessionName: obj.name,
@@ -710,6 +721,12 @@ export default {
     viewGroupMembers() {
       this.isShowGroupMembers = !this.isShowGroupMembers
     },
+    // 展开移交列表
+    unfoldTurnOver() {
+      this.isShowGroupTurnOver = !this.isShowGroupTurnOver
+      this.$refs.turnOver.checkedId = ''
+      this.$refs.turnOver.checkedObj = {}
+    },
     // 查看新消息
     viewNewMessage() {
       this.newMessage = 0
@@ -738,6 +755,13 @@ export default {
       this.http.get(this.requestProxy + this.contactsApi).then(res=>{
         this.addIndex(res.data.data,1)
         this.$refs.addressBook.contactsList = res.data.data
+      })
+    },
+    // 获取移交人员列表
+    getTurnOverContacts() {
+      this.http.get(`${this.requestProxy}${this.contactsApi}/EMP`).then(res=>{
+        this.addIndex(res.data.data,1)
+        this.$refs.turnOver.turnOverContacts = res.data.data
       })
     },
     // 更新群信息
@@ -958,6 +982,12 @@ export default {
         initMembers: []
       }
       this.changeGroupInfo(data)
+    },
+    // 移交会话
+    turnOver(code) {
+      this.http.patch(`${this.requestProxy}${this.turnOverApi}/${this.currentSessionId}/${this.userCode}/${code}`).then(res=>{
+        this.$message.success('会话移交成功')
+      })
     }
   }
 }

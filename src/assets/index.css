@@ -26,7 +26,8 @@ ul {
   clear: both;
   visibility: hidden;
 }
-.yc-members .el-input__inner {
+.yc-members .el-input__inner,
+.cs-turn-over .el-input__inner{
   padding: 0 5px;
   border-radius: 0;
 }

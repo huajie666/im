@@ -16,12 +16,9 @@ export default {
     }
   },
   props: {
-    isSession: {
-      type: Boolean
-    },
-    isShowGroupMembers: {
-      type: Boolean
-    }
+    isSession:Boolean,
+    isShowGroupMembers: Boolean,
+    isShowGroupTurnOver: Boolean
   },
   directives: {
     'stop-im-drag': {
@@ -41,8 +38,8 @@ export default {
   computed: {
     headerWidth() {
       let headerWidth
-      if (this.isShowGroupMembers && this.isSession) {
-        headerWidth = `900px`
+      if ((this.isShowGroupMembers || this.isShowGroupTurnOver) && this.isSession) {
+        headerWidth = `950px`
       } else {
         headerWidth = `750px`
       }

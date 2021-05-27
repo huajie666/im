@@ -48,8 +48,10 @@ export default {
       this.timer = setTimeout(()=>{
         if(this.treeType === 'group') {
           bus.$emit('groupInfo',item.id)
-        } else {
+        } else if(this.treeType === 'employee') {
           bus.$emit('employeeInfo',item)
+        } else if(this.treeType === 'turnOver') {
+          bus.$emit('changeCode',item)
         }
       },300)
     },
@@ -57,7 +59,7 @@ export default {
       clearTimeout(this.timer)
       if(this.treeType === 'group') {
         bus.$emit('groupSession',item)
-      } else {
+      } else if(this.treeType === 'employee') {
         bus.$emit('employeeSession',item)
       }
     }

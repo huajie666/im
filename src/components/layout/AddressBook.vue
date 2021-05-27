@@ -23,21 +23,11 @@ export default {
     }
   },
   props: {
-    userCode: {
-      type: String
-    },
-    isGroupInfo: {
-      type: Boolean
-    },
-    groupInfo: {
-      type: Object
-    },
-    onlineEmployees: {
-      type: Array
-    },
-    keyword: {
-      type: String
-    },
+    userCode: String,
+    isGroupInfo: Boolean,
+    groupInfo: Object,
+    onlineEmployees: Array,
+    keyword: String,
     http: {},
     requestProxy: {
       type: String,
@@ -54,6 +44,17 @@ export default {
   },
   components: {
     Contacts
+  },
+  computed: {
+    filteredGroup() {
+      let newList = []
+      this.groupList.forEach(item=>{
+        if(item.name.includes(this.keyword)){
+          newList.push(item)
+        }
+      })
+      return newList
+    }
   },
   created() {
     bus.$on('groupInfo', data =>{
