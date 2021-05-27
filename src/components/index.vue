@@ -748,6 +748,7 @@ export default {
       this.http.get(this.requestProxy + this.groupApi).then(res=>{
         this.addIndex(res.data.data,1)
         this.$refs.addressBook.groupList = res.data.data
+        this.$refs.addressBook.copyGroupList = JSON.parse(JSON.stringify(res.data.data))
       })
     },
     // 获取联系人列表
@@ -755,6 +756,7 @@ export default {
       this.http.get(this.requestProxy + this.contactsApi).then(res=>{
         this.addIndex(res.data.data,1)
         this.$refs.addressBook.contactsList = res.data.data
+        this.$refs.addressBook.copyContactsList = JSON.parse(JSON.stringify(res.data.data))
       })
     },
     // 获取移交人员列表
@@ -762,6 +764,7 @@ export default {
       this.http.get(`${this.requestProxy}${this.contactsApi}/EMP`).then(res=>{
         this.addIndex(res.data.data,1)
         this.$refs.turnOver.turnOverContacts = res.data.data
+        this.$refs.turnOver.copyTurnOverContacts = JSON.parse(JSON.stringify(res.data.data))
       })
     },
     // 更新群信息

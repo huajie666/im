@@ -3,8 +3,8 @@
     <div class="yc-top">
       <span class="yc-add-group" @click="addGroup">+ 添加项目群</span>
     </div>
-    <contacts :treeData="groupList" :onlineEmployees="onlineEmployees" :selectId="selectId" treeType="group"></contacts>
-    <contacts :treeData="contactsList" :onlineEmployees="onlineEmployees" :selectId="selectId" treeType="employee"></contacts>
+    <contacts :treeData="filteredGroup" :onlineEmployees="onlineEmployees" :selectId="selectId" treeType="group"></contacts>
+    <contacts :treeData="filteredContacts" :onlineEmployees="onlineEmployees" :selectId="selectId" treeType="employee"></contacts>
   </div>
 </template>
 
@@ -20,6 +20,8 @@ export default {
       groupList: [],
       contactsList: [],
       selectId: '', //当前选中的群或者员工id
+      copyGroupList: [],
+      copyContactsList: [],
     }
   },
   props: {
@@ -47,13 +49,20 @@ export default {
   },
   computed: {
     filteredGroup() {
-      let newList = []
-      this.groupList.forEach(item=>{
-        if(item.name.includes(this.keyword)){
-          newList.push(item)
-        }
-      })
-      return newList
+      this.groupList = JSON.parse(JSON.stringify(this.copyGroupList))
+      if(this.keyword) {
+        return this.filteredList(this.groupList, this.keyword)
+      } else {
+        return this.groupList
+      }
+    },
+    filteredContacts() {
+      this.contactsList = JSON.parse(JSON.stringify(this.copyContactsList))
+      if(this.keyword) {
+        return this.filteredList(this.contactsList, this.keyword)
+      } else {
+        return this.contactsList
+      }
     }
   },
   created() {
@@ -140,6 +149,25 @@ export default {
         }
       }
     },
+    // 联系列表过滤方法
+    filteredList(treeData,keyword) {
+      let newTreeData = []
+      for(let item of treeData) {
+        if(item.name.includes(keyword)) {
+          newTreeData.push(item)
+          continue
+        } else {
+          if(item.hasChild) {
+            let children = this.filteredList(item.children, keyword)
+            if(children.length) {
+              item.children = children
+              newTreeData.push(item)
+            }
+          }
+        }
+      }
+      return newTreeData
+    }
   }
 }
 </script>

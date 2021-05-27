@@ -2,7 +2,7 @@
   <div class="cs-turn-over" :class="isShow()">
     <el-input class="cs-serach-input" v-model="employee" size="mini"></el-input>
     <el-button class="cs-confirm-but" type="primary" @click="turnOver" >移 交</el-button>
-    <contacts :treeData="turnOverContacts" :selectId="checkedId" treeType="turnOver"></contacts>
+    <contacts :treeData="filteredContacts" :selectId="checkedId" treeType="turnOver"></contacts>
   </div>
 </template>
 
@@ -21,8 +21,19 @@ export default {
     return {
       employee: '',
       turnOverContacts: [],
+      copyTurnOverContacts: [],
       checkedId: '',
       checkedObj: {}
+    }
+  },
+  computed: {
+    filteredContacts() {
+      this.turnOverContacts = JSON.parse(JSON.stringify(this.copyTurnOverContacts))
+      if(this.employee) {
+        return this.filteredList(this.turnOverContacts,this.employee)
+      } else {
+        return this.turnOverContacts
+      }
     }
   },
   created() {
@@ -47,6 +58,25 @@ export default {
       }).then(()=>{
         this.$emit('turnOver',this.checkedObj.code)
       }).catch(()=>{})
+    },
+    // 联系列表过滤方法
+    filteredList(treeData,keyword) {
+      let newTreeData = []
+      for(let item of treeData) {
+        if(item.name.includes(keyword)) {
+          newTreeData.push(item)
+          continue
+        } else {
+          if(item.hasChild) {
+            let children = this.filteredList(item.children, keyword)
+            if(children.length) {
+              item.children = children
+              newTreeData.push(item)
+            }
+          }
+        }
+      }
+      return newTreeData
     }
   }
 }
