@@ -7,14 +7,14 @@
         <el-popover placement="right" widtg="100%" trigger="click">
           <div>
             <ul  style="font-size:12px">
-              <li>姓名：{{ memberInfo.employeeName }}</li>
-              <li>性别：{{ memberInfo.gender }}</li>
-              <li>工号：{{ memberInfo.employeeCode }}</li>
-              <li>所属公司：{{ memberInfo.companyName }}</li>
-              <li>任职部门：{{ memberInfo.departmentName }}</li>
-              <li>任职岗位：{{ memberInfo.dutiesName }}</li>
-              <li>手机号码：{{ memberInfo.mobile }}</li>
-              <li>电子邮箱：{{ memberInfo.email }}</li>
+              <li v-if="memberInfo.employeeName">姓名：{{ memberInfo.employeeName }}</li>
+              <li v-if="memberInfo.gender">性别：{{ memberInfo.gender }}</li>
+              <li v-if="memberInfo.employeeCode">工号：{{ memberInfo.employeeCode }}</li>
+              <li v-if="memberInfo.companyName">所属公司：{{ memberInfo.companyName }}</li>
+              <li v-if="memberInfo.departmentName">任职部门：{{ memberInfo.departmentName }}</li>
+              <li v-if="memberInfo.dutiesName">任职岗位：{{ memberInfo.dutiesName }}</li>
+              <li v-if="memberInfo.mobile">手机号码：{{ memberInfo.mobile }}</li>
+              <li v-if="memberInfo.email">电子邮箱：{{ memberInfo.email }}</li>
             </ul>
           </div>
           <span slot="reference" class="yc-popover">

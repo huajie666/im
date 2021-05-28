@@ -64,17 +64,22 @@ module.exports = {
     extensions: ['*', '.js', '.vue', '.json']
   },
   devServer: {
+    open: true, // 启动成功是否打开页面
     historyApiFallback: true,
+    inline: true, // 用来支持dev-server自动刷新
     noInfo: true,
     overlay: true,
+    host: '0.0.0.0', // 设置IP地址访问
+    useLocalIp: true, // 自动使用本地IP地址打开
+    port: '8080', // 端口 默认就是8080
     proxy: {
       '/api': {
         // target: 'http://192.168.101.69:8081/',
-        // target: 'http://192.168.101.27:8082/',
         target: 'http://192.168.101.27:8081/',
         // target: 'http://192.168.101.40:8082/',
-        loglevel: 'debug',
-        changeOrinin: true,
+        // target: 'http://qa-backstage.bestlvs.com/',
+        changeOrinin: true, // 如果需要跨域需要配置
+        // secure: false, // https需要配置
         pathRewrite: { '^/api': '/api' }
       },
     }

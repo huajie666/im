@@ -2,35 +2,35 @@
   <div style="height:100%">
     <div class="yc-title">个人信息</div>
     <ul class="yc-content">
-      <li class="yc-row">
+      <li class="yc-row" v-if="employeeInfo.employeeName">
         <span class="yc-key">姓名:</span>
         <span>{{employeeInfo.employeeName}}</span>
       </li>
-      <li class="yc-row">
+      <li class="yc-row" v-if="employeeInfo.gender">
         <span class="yc-key">性别:</span>
         <span>{{employeeInfo.gender}}</span>
       </li>
-      <li class="yc-row">
+      <li class="yc-row" v-if="employeeInfo.employeeCode">
         <span class="yc-key">工号:</span>
         <span>{{employeeInfo.employeeCode}}</span>
       </li>
-      <li class="yc-row">
+      <li class="yc-row" v-if="employeeInfo.companyName">
         <span class="yc-key">所属公司:</span>
         <span>{{employeeInfo.companyName}}</span>
       </li>
-      <li class="yc-row">
+      <li class="yc-row" v-if="employeeInfo.departmentName">
         <span class="yc-key">任职部门:</span>
         <span>{{employeeInfo.departmentName}}</span>
       </li>
-      <li class="yc-row">
+      <li class="yc-row" v-if="employeeInfo.dutiesName">
         <span class="yc-key">任职岗位:</span>
         <span>{{employeeInfo.dutiesName}}</span>
       </li>
-      <li class="yc-row">
+      <li class="yc-row" v-if="employeeInfo.mobile">
         <span class="yc-key">手机号码:</span>
         <span>{{employeeInfo.mobile}}</span>
       </li>
-      <li class="yc-row">
+      <li class="yc-row" v-if="employeeInfo.email">
         <span class="yc-key">电子邮箱:</span>
         <span>{{employeeInfo.email}}</span>
       </li>
