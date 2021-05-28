@@ -6,7 +6,7 @@
         <span>{{item.name}}</span>
         <i class="yc-down-arrow im-iconfont im-icon-arrow-bottom" :class="{roteate: item.expand}" />
       </div>
-      <div class="cs-item" :style="{paddingLeft: item.index*10+'px'}" v-else @click="viewInfo(item)" @dblclick="openSession(item)">
+      <div class="cs-item" :style="{paddingLeft: item.index*10+'px'}" :class="{itemActive: selectId===item.id && treeType ==='turnOver'}" v-else @click="viewInfo(item)" @dblclick="openSession(item)">
         <i class="yc-contacts-icon im-iconfont im-icon-yuangong" :class="{active: item.nodeType === 'LEAF' && onlineEmployees.includes(item.code)}" />
         <span :class="{active: selectId===item.id}">{{item.name}}</span>
       </div>
@@ -96,5 +96,8 @@ export default {
 }
 .active {
   color: #409eff;
+}
+.itemActive {
+  background-color: rgb(217, 236, 255);
 }
 </style>
