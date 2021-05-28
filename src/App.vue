@@ -14,11 +14,11 @@ export default {
   data() {
     return {
       isOpen: true,
-      wsurl: 'ws://192.168.101.27:8081/chat/98F19003?DEVICE=WEB',
-      userCode: '98F19003',
-      userName: '王晓赛',
+      wsurl: 'ws://192.168.101.27:8081/chat/98F19004?DEVICE=WEB',
+      userCode: '98F19004',
+      userName: '胡安',
       userCompany: '石家庄',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyMjAyNDQ2MTM5MiwiZXhwIjoxNjIyNjI5MjYxfQ.OIl67C-4w30cJtfP8m0RP-YuJM-PUaxvGcBRJ7_Ryh_VXOX-rSOBpr4bmq5ZD34gU9iJ-NYFMUT2IYcci-IfGA',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwNCIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyMjE5ODIwMjMwNywiZXhwIjoxNjIyODAzMDAyfQ.HiTx-pVSadDSE7NU4eVSYvrSDxs1XkmmrSnwFVUClIdPPKUkP6lapxo0_tiOjZuSkn0x5ksqmIJLJTi0tQzYFA',
       requestProxy:'api/',
       sessionList: 'manage/im/session/search',
       messageListApi: 'im/message/search/offline/message',
@@ -32,7 +32,7 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 .but-control{
   text-align: center;
   padding: 10px  0;

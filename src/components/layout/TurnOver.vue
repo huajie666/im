@@ -92,6 +92,7 @@ export default {
     padding: 50px 5px 5px;
     overflow-y: auto;
     overflow-x: hidden;
+    font-size: 12px;
     border-left: 1px solid #cccccc;
     .cs-serach-input {
       position: absolute;
@@ -106,6 +107,10 @@ export default {
       height: 28px;
       font-size: 12px;
       padding: 0 8px;
+      border-radius: 0;
+    }
+    /deep/.el-input__inner {
+      padding: 0 5px;
       border-radius: 0;
     }
   }

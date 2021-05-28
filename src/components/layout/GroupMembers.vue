@@ -93,12 +93,12 @@ export default {
       if (item.employeeCode === this.userCode) {
         return
       }
-      this.$emit('changeSessionPage',true)
       let obj = {
         type: 1,
         code: item.employeeCode,
         name: item.employeeName,
         company: item.companyName,
+        isSession: true
       }
       this.$emit('initiateChat',obj)
     }
@@ -106,7 +106,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .yc-members {
     position: absolute;
     top: 55px;
@@ -114,9 +114,14 @@ export default {
     height: calc(100% - 55px);
     box-sizing: border-box;
     padding: 50px 5px 5px;
+    font-size: 12px;
     overflow-y: auto;
     overflow-x: hidden;
     border-left: 1px solid #cccccc;
+    /deep/.el-input__inner {
+      padding: 0 5px;
+      border-radius: 0;
+    }
   }
   .unfoldHeader {
     width: 200px;

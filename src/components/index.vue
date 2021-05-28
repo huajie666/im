@@ -1,22 +1,22 @@
 <template>
   <div>
-    <div class="yc-IM" v-im-drag v-show="isOpen">
+    <div class="im-main" v-im-drag v-show="isOpen">
       <session-header :isSession="isSession" :isShowGroupMembers="isShowGroupMembers" :isShowGroupTurnOver="isShowGroupTurnOver" @changeKeyword="changeKeyword" @changeSessionPage="changeSessionPage" @closeSession="closeSession"></session-header>
       <div v-show="isSession">
         <session-list :keyword="keyword" :currentSessionId="currentSessionId" :sessionList="sessionList" :onlineEmployees="onlineEmployees" @chat="chat" @stick="stick"></session-list>
         <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :requestProxy="requestProxy" :uploadingApi="uploadingApi" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @unfoldTurnOver="unfoldTurnOver" @sendMessage="sendMessage" @previewImg="previewImg" @createGroup="createGroup"></session-message>
-        <group-members v-show="isShowGroupMembers" :isShowGroupMembers="isShowGroupMembers" :groupMembers="groupMembers" :onlineEmployees="onlineEmployees" :userCode="userCode" :http="http" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat"></group-members>
+        <group-members v-show="isShowGroupMembers" :isShowGroupMembers="isShowGroupMembers" :groupMembers="groupMembers" :onlineEmployees="onlineEmployees" :userCode="userCode" :http="http" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @initiateChat="initiateChat"></group-members>
         <turn-over ref="turnOver" v-show="isShowGroupTurnOver" :isShowGroupTurnOver="isShowGroupTurnOver" :userName="userName" :userCompany="userCompany" @turnOver="turnOver"></turn-over>
       </div>
       <div v-show="!isSession">
-        <address-book ref="addressBook" :userCode="userCode" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :groupInfoApi="groupInfoApi" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat" />
-        <div class="yc-info" v-if="isShowInfo">
+        <address-book ref="addressBook" :userCode="userCode" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :groupInfoApi="groupInfoApi" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @initiateChat="initiateChat" />
+        <div class="im-info" v-if="isShowInfo">
           <group-info ref="groupInfo" v-if="isGroupInfo" :groupInfo="groupInfo" @changeGroupInfo="changeGroupInfo" @hiddenInfo="hiddenInfo" @delEmployee="delEmployee" @saveGroup="saveGroup" @delGroup="delGroup" />
-          <employee-info v-else :employeeInfo="employeeInfo" :userCode="userCode" @changeSessionPage="changeSessionPage" @initiateChat="initiateChat"></employee-info>  
+          <employee-info v-else :employeeInfo="employeeInfo" :userCode="userCode" @initiateChat="initiateChat"></employee-info>  
         </div>
       </div>
     </div>
-    <ul v-show="stickWindow" class="yc-stick" :style="{left:stickLeft+'px',top:stickTop+'px'}">
+    <ul v-show="stickWindow" class="im-stick" :style="{left:stickLeft+'px',top:stickTop+'px'}">
       <li v-if="!isStick" @click="changeStick">聊天置顶</li>
       <li v-else @click="changeStick">取消置顶</li>
     </ul>
@@ -276,12 +276,12 @@ export default {
     },
     // 连接成功
     websocketonopen() {
-      console.log('---连接成功')
+      // console.log('---连接成功')
     },
     // 接收到的推送消息
     websocketonmessage(e) {
       let data = JSON.parse(e.data)
-      console.log(data,'接收消息')
+      // console.log(data,'接收消息')
       // 后台推送断开消息，不需要重连
       if(data.RepetitionLoggingIn) {
         this.isReconnect = false
@@ -387,10 +387,10 @@ export default {
                 } else {
                   messageContent = data.content.message
                 }
-                
                 this.newNotify = this.$notify.info({
                   title: "消息",
-                  message: `${data.fromName}:${messageContent}`,
+                  message: `<p class="im-notify">${data.fromName}:${messageContent}</p>`,
+                  dangerouslyUseHTMLString: true,
                   duration: 2000,
                   onClick() {
                     that.isOpen = true
@@ -448,7 +448,8 @@ export default {
               }
               this.newNotify = this.$notify.info({
                 title: "消息",
-                message: `${data.fromName}:${messageContent}`,
+                message: `<p class="im-notify">${data.fromName}:${messageContent}</p>`,
+                dangerouslyUseHTMLString: true,
                 duration: 2000,
                 onClick() {
                   that.isOpen = true
@@ -538,7 +539,7 @@ export default {
     },
     // 连接断开
     websocketclose() {
-      console.log('连接断开了')
+      // console.log('连接断开了')
     },
     // 查询关键字改变
     changeKeyword(val) {
@@ -559,13 +560,15 @@ export default {
         employeeCode: this.userCode
       }
       this.http.post(this.requestProxy + this.sessionListApi,data).then(res=>{
-        this.sessionList = res.data.data
-        this.employeesObj[this.userCode] = this.userName
-        this.sessionList.forEach(item =>{
-          if(item.sessionType === 1) {
-            this.employeesObj[item.chatTarget] = item.sessionName
-          }
-        })
+        if(res.data.data) {
+          this.sessionList = res.data.data
+          this.employeesObj[this.userCode] = this.userName
+          this.sessionList.forEach(item =>{
+            if(item.sessionType === 1) {
+              this.employeesObj[item.chatTarget] = item.sessionName
+            }
+          })
+        }
       })
     },
     // 获取群成员列表
@@ -590,9 +593,16 @@ export default {
         company: item.company
       }
       if(item.sessionType === 2){
-        this.getGroupMembers(item.chatTarget)
+        this.http.get(`${this.requestProxy}${this.groupInfoApi}/${item.chatTarget}`).then(res=>{
+          this.groupMembers = res.data.data.employeeList
+          this.groupMembers.forEach(obj => {
+            this.employeesObj[obj.employeeCode] = obj.employeeName
+            this.currentSessionId = item.sessionId
+          })
+        })
+      } else {
+        this.currentSessionId = item.sessionId
       }
-      this.currentSessionId = item.sessionId
     },
     // 通讯录发起聊天
     initiateChat(obj) {
@@ -613,6 +623,7 @@ export default {
             this.currentSessionId = item.sessionId
           }
         })
+        this.changeSessionPage(obj.isSession)
       } else {
         let data = {
           searchType: "0",
@@ -621,17 +632,20 @@ export default {
           sessionType: obj.type
         }
         this.http.post(this.requestProxy + this.sessionListApi,data).then(res=>{
-          this.sessionList = res.data.data
-          if(obj.type === 1) {
-            this.employeesObj[obj.code] = obj.name
-          } else{
-            this.getGroupMembers(obj.code)
-          }
-          this.sessionList.forEach(item=>{
-            if(item.chatTarget === obj.code) {
-              this.currentSessionId = item.sessionId
+          if(res.data.data) {
+            this.sessionList = res.data.data
+            if(obj.type === 1) {
+              this.employeesObj[obj.code] = obj.name
+            } else{
+              this.getGroupMembers(obj.code)
             }
-          })
+            this.sessionList.forEach(item=>{
+              if(item.chatTarget === obj.code) {
+                this.currentSessionId = item.sessionId
+              }
+            })
+            this.changeSessionPage(obj.isSession)
+          }
         })
       }
     },
@@ -996,8 +1010,8 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-  .yc-IM {
+<style lang="less">
+  .im-main {
     position: absolute;
     width: 750px;
     height: 600px;
@@ -1008,7 +1022,7 @@ export default {
     box-shadow: 5px 5px 10px rgb(0 0 0 / 30%);
     background-color: #fff;
     z-index: 2000;
-    .yc-info {
+    .im-info {
       position: absolute;
       width: calc(100% - 200px);
       height: calc(100% - 55px);
@@ -1016,7 +1030,7 @@ export default {
       top: 55px;
     }
   }
-  .yc-stick{
+  .im-stick{
     position: absolute;
     background: #fff;
     white-space: nowrap;
@@ -1032,6 +1046,18 @@ export default {
       padding: 7px 16px;
       &:hover {
         background: #eee;
+      }
+    }
+  }
+  // 提示消息超出显示省略号
+  .el-notification {
+    .el-notification__group {
+      width: calc(~"100% - 15px");
+      .el-notification__content .im-notify {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break: break-all;
       }
     }
   }

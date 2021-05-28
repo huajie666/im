@@ -23,6 +23,9 @@ export default {
     return {
       // 截取姓氏val
       hiddenSurname(val) {
+        if(!val) {
+          return
+        }
         if (twoSurname.includes(val.substring(0, 2))) {
           name = val.substring(2)
         } else {
@@ -71,6 +74,7 @@ export default {
     width: 200px;
     height: calc(100% - 55px);
     top: 55px;
+    font-size: 12px;
     cursor: pointer;
     overflow-x: hidden;
     overflow-y: auto;

@@ -123,12 +123,12 @@ export default {
     },
     // 打开群会话窗口
     openGroupSession(item) {
-      this.$emit('changeSessionPage',true)
       let obj = {
         type: 2,
         code: item.id,
         name: item.name,
-        company: ''
+        company: '',
+        isSession: true
       }
       this.$emit('initiateChat',obj)
     },
@@ -138,12 +138,12 @@ export default {
         this.$emit('addEmployee',item)
       } else {
         if(this.userCode !== item.code) {
-          this.$emit('changeSessionPage',true)
           let obj = {
             type: 1,
             code: item.code,
             name: item.name,
             company: item.companyShortName,
+            isSession: true
           }
           this.$emit('initiateChat',obj)
         }
@@ -182,6 +182,7 @@ export default {
   overflow-y: auto;
   border-right: 1px solid #cccccc;
   box-sizing: border-box;
+  font-size: 12px;
 }
 .yc-top {
   height: 45px;

@@ -4,8 +4,8 @@
       <span>{{ currentInfo.sessionName }}</span>
       <span v-if="currentInfo.company">
         <span>({{ currentInfo.company }})</span>
-        <i class="im-iconfont im-icon-tianjia fr" @click="createGroup"></i>
-        <i class="im-iconfont im-icon-yijiao fr" @click="unfoldTurnOver"></i>
+        <i class="im-iconfont im-icon-tianjia" style="float: right" @click="createGroup"></i>
+        <i class="im-iconfont im-icon-yijiao" style="float: right" @click="unfoldTurnOver"></i>
       </span>
       <span v-else class="yc-group" @click="viewGroupMembers">查看群成员</span>
     </div>
@@ -99,6 +99,9 @@ export default {
       moment,
       // 截取姓氏val
       hiddenSurname(val) {
+        if(!val) {
+          return
+        }
         if (twoSurname.includes(val.substring(0, 2))) {
           name = val.substring(2)
         } else {
@@ -262,6 +265,7 @@ export default {
     height: calc(~"100% - 55px");
     top: 55px;
     left: 200px;
+    font-size: 12px;
     .yc-title {
       height: 45px;
       line-height: 45px;
@@ -342,6 +346,8 @@ export default {
           border: 1px solid #cccccc;
           overflow-wrap: break-word;
           pre {
+            padding: 0;
+            margin: 0;
             white-space: pre-wrap;
             white-space: -moz-pre-wrap;
             white-space: -pre-wrap;

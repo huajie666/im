@@ -3,7 +3,6 @@ body {
   height: 100%;
   margin:0px;
   overflow: hidden;
-  font-size: 12px;
   font-family: SimSun
 }
 ul,
@@ -15,28 +14,4 @@ pre {
 }
 ul {
   list-style: none;
-}
-.fr {
-  float: right;
-}
-.clearfix:after {
-  content: '';
-  display: block;
-  height: 0px;
-  clear: both;
-  visibility: hidden;
-}
-.yc-members .el-input__inner,
-.cs-turn-over .el-input__inner{
-  padding: 0 5px;
-  border-radius: 0;
-}
-.el-notification .el-notification__group {
-  width: calc(100% - 15px);
-}
-.el-notification__content p {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  word-break: break-all;
 }

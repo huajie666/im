@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%">
+  <div class="im-group-info">
     <div class="yc-title">
       <span>项目群名称：</span>
       <input type="text" placeholder="请输入项目名称" v-model="groupInfo.name" :disabled="!groupInfo.isEdit">
@@ -89,6 +89,10 @@ export default {
 </script>
 
 <style scoped>
+  .im-group-info {
+    font-size: 12px;
+    height:100%
+  }
   .yc-title {
     height: 45px;
     line-height: 45px;

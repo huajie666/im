@@ -54,12 +54,12 @@ export default {
   },
   methods: {
     chat() {
-      this.$emit('changeSessionPage',true)
       let obj = {
         type: 1,
         code: this.employeeInfo.employeeCode,
         name: this.employeeInfo.employeeName,
         company: this.employeeInfo.companyShortName,
+        isSession: true
       }
       this.$emit('initiateChat',obj)
     }
