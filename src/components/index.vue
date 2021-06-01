@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="im-plug">
     <div class="im-main" v-im-drag v-show="isOpen">
       <session-header :isSession="isSession" :isShowGroupMembers="isShowGroupMembers" :isShowGroupTurnOver="isShowGroupTurnOver" @changeKeyword="changeKeyword" @changeSessionPage="changeSessionPage" @closeSession="closeSession"></session-header>
       <div v-show="isSession">
@@ -1011,41 +1011,50 @@ export default {
 </script>
 
 <style lang="less">
-  .im-main {
-    position: absolute;
-    width: 750px;
-    height: 600px;
-    top: 15vh;
-    left: 50%;
-    transform: translate(-50%); 
-    border-radius: 4px;
-    box-shadow: 5px 5px 10px rgb(0 0 0 / 30%);
-    background-color: #fff;
-    z-index: 2000;
-    .im-info {
-      position: absolute;
-      width: calc(100% - 200px);
-      height: calc(100% - 55px);
-      left: 200px;
-      top: 55px;
+  .im-plug {
+    ul,li,p,pre {
+      padding: 0;
+      margin: 0;
     }
-  }
-  .im-stick{
-    position: absolute;
-    background: #fff;
-    white-space: nowrap;
-    padding: 5px 0;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 400;
-    color: #000;
-    z-index: 3000;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
-    li {
-      cursor: pointer;
-      padding: 7px 16px;
-      &:hover {
-        background: #eee;
+    ul {
+      list-style: none;
+    }
+    .im-main {
+      position: absolute;
+      width: 750px;
+      height: 600px;
+      top: 15vh;
+      left: 50%;
+      transform: translate(-50%); 
+      border-radius: 4px;
+      box-shadow: 5px 5px 10px rgb(0 0 0 / 30%);
+      background-color: #fff;
+      z-index: 2000;
+      .im-info {
+        position: absolute;
+        width: calc(100% - 200px);
+        height: calc(100% - 55px);
+        left: 200px;
+        top: 55px;
+      }
+    }
+    .im-stick{
+      position: absolute;
+      background: #fff;
+      white-space: nowrap;
+      padding: 5px 0;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 400;
+      color: #000;
+      z-index: 3000;
+      box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
+      li {
+        cursor: pointer;
+        padding: 7px 16px;
+        &:hover {
+          background: #eee;
+        }
       }
     }
   }
