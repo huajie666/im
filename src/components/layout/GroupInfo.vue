@@ -42,6 +42,7 @@ export default {
       this.$emit('delEmployee',item)
     },
     exit() {
+      console.log(this.groupInfo)
       let data = {
         isAdd: this.groupInfo.isAdd,
         isEdit: true,

@@ -5,13 +5,3 @@ body {
   overflow: hidden;
   font-family: SimSun
 }
-ul,
-li,
-p,
-pre {
-  padding: 0;
-  margin: 0;
-}
-ul {
-  list-style: none;
-}

@@ -120,7 +120,7 @@ export default {
         query: {}
       },
       attrs: {
-        accept: "image/*,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" //限制上传文件格式
+        accept: this.uploadType //限制上传文件格式
       },
       textarea: '',
       isShowProgressBar: false, //是否显示上传进度条
@@ -129,33 +129,15 @@ export default {
     }
   },
   props: {
-    userCode: {
-      type: String
-    },
-    currentInfo: {
-      type: Object
-    },
-    employeesObj: {
-      type: Object
-    },
-    messageList: {
-      type: Array
-    },
-    lastPageNum: {
-      type: Number
-    },
-    unreadNum: {
-      type: Number 
-    },
-    newMessage: {
-      type: Number
-    },
-    onlineEmployees: {
-      type: Array
-    },
-    currentSessionId: {
-      type: String
-    },
+    userCode: String,
+    currentInfo: Object,
+    employeesObj: Object,
+    messageList: Array,
+    lastPageNum: Number,
+    unreadNum: Number,
+    newMessage: Number,
+    onlineEmployees: Array,
+    currentSessionId: String,
     requestProxy: {
       type: String,
       default : 'api/'
@@ -163,6 +145,14 @@ export default {
     uploadingApi: {
       type: String,
       default: 'storage/file'
+    },
+    uploadSize: {
+      type: Number,
+      default: 20
+    },
+    uploadType: {
+      type: String,
+      default: ''
     }
   },
   methods: {
@@ -200,9 +190,9 @@ export default {
       window.open(`${url}?displayName=${name}`, "_self");
     },
     fileAdded(file, event) {
-      if(file.size > 20480000) {
+      if(file.size > this.uploadSize * 1024000) {
         file.paused = true
-        this.$message.warning('上传文件不能大于20M')
+        this.$message.warning(`上传文件不能大于${this.uploadSize}M`)
         return
       }
       this.isShowProgressBar = true
@@ -213,6 +203,7 @@ export default {
       })
     },
     fileSuccess(rootFile, file, message, chunk) {
+      console.log(this.options.target)
       this.isShowProgressBar = false
       if (message) {
         let messageJson = JSON.parse(message)

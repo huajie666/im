@@ -123,14 +123,25 @@ export default {
     },
     // 打开群会话窗口
     openGroupSession(item) {
-      let obj = {
-        type: 2,
-        code: item.id,
-        name: item.name,
-        company: '',
-        isSession: true
-      }
-      this.$emit('initiateChat',obj)
+      this.http.get(`${this.requestProxy}${this.groupInfoApi}/${item.id}`).then(res=>{
+        if(res.data.data) {
+          let isGroupMembers = res.data.data.employeeList.some(item1 => {
+            return item1.employeeCode === this.userCode
+          })
+          if(!isGroupMembers) {
+            this.$message.warning('不是群成员不能进行群聊')
+            return
+          }
+          let obj = {
+            type: 2,
+            code: item.id,
+            name: item.name,
+            company: '',
+            isSession: true
+          }
+          this.$emit('initiateChat',obj)
+        }
+      })
     },
     // 打开员工会话窗口
     openEmployeeSession(item) {
