@@ -3,8 +3,9 @@
     <div class="but-control">
       <el-button @click="isOpen = true">打开窗口</el-button>
       <el-button @click="isOpen = false">关闭窗口</el-button>
+      <el-button @click="closeWebsocket">断开连接</el-button>
     </div>
-    <i-m :isOpen="isOpen" :wsurl="wsurl" :userCode="userCode" :userName="userName" :userCompany="userCompany" :token="token" :sessionListApi="sessionList" :messageListApi="messageListApi" @closeSession="closeSession" />
+    <i-m ref="im" :isOpen="isOpen" :wsurl="wsurl" :userCode="userCode" :userName="userName" :userCompany="userCompany" :token="token" :sessionListApi="sessionList" :messageListApi="messageListApi" @closeSession="closeSession" />
   </div>
 </template>
 
@@ -27,6 +28,9 @@ export default {
   methods: {
     closeSession(val) {
       this.isOpen = val
+    },
+    closeWebsocket() {
+      this.$refs.im.closeWebsocket()
     }
   }
 }

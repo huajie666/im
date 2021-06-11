@@ -197,7 +197,7 @@ export default {
     TurnOver
   },
   mounted() {
-    console.log('版本号：1.2.1')
+    console.log('版本号：1.2.2')
     // 创建axios实例
     this.http = axios.create({
       timeout: 12000
@@ -219,6 +219,9 @@ export default {
     this.getGroup()
     this.getContacts()
     this.getTurnOverContacts()
+  },
+  beforeDestroy() {
+    this.closeWebsocket()
   },
   watch: {
     currentSessionId: {
@@ -289,7 +292,7 @@ export default {
     },
     // 连接成功
     websocketonopen() {
-      // console.log('---连接成功')
+      console.log('---连接成功')
     },
     // 接收到的推送消息
     websocketonmessage(e) {
@@ -552,7 +555,11 @@ export default {
     },
     // 连接断开
     websocketclose() {
-      // console.log('连接断开了')
+      console.log('---连接断开')
+    },
+    // 关闭websocket
+    closeWebsocket() {
+      this.webscoket.close()
     },
     // 查询关键字改变
     changeKeyword(val) {
