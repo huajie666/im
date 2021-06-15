@@ -1032,63 +1032,62 @@ export default {
 </script>
 
 <style lang="less">
-  .im-plug {
-    ul,li,p,pre {
-      padding: 0;
-      margin: 0;
-    }
-    ul {
-      list-style: none;
-    }
-    .im-main {
-      position: absolute;
-      width: 750px;
-      height: 600px;
-      top: 15vh;
-      left: 50%;
-      transform: translate(-50%); 
-      border-radius: 4px;
-      box-shadow: 5px 5px 10px rgb(0 0 0 / 30%);
-      background-color: #fff;
-      z-index: 2000;
-      .im-info {
-        position: absolute;
-        width: calc(100% - 200px);
-        height: calc(100% - 55px);
-        left: 200px;
-        top: 55px;
-      }
-    }
-    .im-stick{
-      position: absolute;
-      background: #fff;
-      white-space: nowrap;
-      padding: 5px 0;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 400;
-      color: #000;
-      z-index: 3000;
-      box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
-      li {
-        cursor: pointer;
-        padding: 7px 16px;
-        &:hover {
-          background: #eee;
-        }
-      }
-    }
+  .im-plug ul,
+  .im-plug li,
+  .im-plug p,
+  .im-plug pre {
+    padding: 0;
+    margin: 0;
+  }
+  .im-plug ul {
+    list-style: none;
+  }
+  .im-plug .im-main {
+    position: absolute;
+    width: 750px;
+    height: 600px;
+    top: 15vh;
+    left: 50%;
+    transform: translate(-50%); 
+    border-radius: 4px;
+    box-shadow: 5px 5px 10px rgb(0 0 0 / 30%);
+    background-color: #fff;
+    z-index: 2000;
+  }
+  .im-plug .im-main .im-info {
+    position: absolute;
+    width: calc(100% - 200px);
+    height: calc(100% - 55px);
+    left: 200px;
+    top: 55px;
+  }
+  .im-plug .im-stick {
+    position: absolute;
+    background: #fff;
+    white-space: nowrap;
+    padding: 5px 0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #000;
+    z-index: 3000;
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
+  }
+  .im-plug .im-stick li {
+    cursor: pointer;
+    padding: 7px 16px;
+  }
+  .im-plug .im-stick li:hover{
+    background: #eee;
   }
   // 提示消息超出显示省略号
-  .el-notification {
-    .el-notification__group {
-      width: calc(~"100% - 15px");
-      .el-notification__content .im-notify {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        word-break: break-all;
-      }
-    }
+  .el-notification .el-notification__group {
+    width: calc(~"100% - 15px");
+  }
+  .el-notification .el-notification__group .el-notification__content .im-notify {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
   }
 </style>
