@@ -3,12 +3,12 @@
     <div v-for="item of treeData" :key="item.id">
       <div class="cs-item" :style="{paddingLeft: item.index*10+'px'}" v-if="item.hasChild" @click="item.expand = !item.expand">
         <i class="yc-company-icon im-iconfont im-icon-qiye" />
-        <span>{{item.name}}</span>
+        <span class="cs-item-name" :title="item.name">{{item.name}}</span>
         <i class="yc-down-arrow im-iconfont im-icon-arrow-bottom" :class="{roteate: item.expand}" />
       </div>
       <div class="cs-item" :style="{paddingLeft: item.index*10+'px'}" :class="{itemActive: selectId===item.id && treeType ==='turnOver'}" v-else @click="viewInfo(item)" @dblclick="openSession(item)">
         <i class="yc-contacts-icon im-iconfont im-icon-yuangong" :class="{active: item.nodeType === 'LEAF' && onlineEmployees.includes(item.code)}" />
-        <span :class="{active: selectId===item.id}">{{item.name}}</span>
+        <span class="cs-item-name" :title="item.name" :class="{active: selectId===item.id}">{{item.name}}</span>
       </div>
       <ul v-show="item.expand">
         <contacts :treeData="item.children" :onlineEmployees="onlineEmployees" :selectId="selectId" :treeType="treeType"></contacts>
@@ -46,20 +46,20 @@ export default {
     viewInfo(item) {
       clearTimeout(this.timer)
       this.timer = setTimeout(()=>{
-        if(this.treeType === 'group') {
+        if(this.treeType === 'group' && item.nodeType !== 'TOP') {
           bus.$emit('groupInfo',item.id)
-        } else if(this.treeType === 'employee') {
+        } else if(this.treeType === 'employee' && item.nodeType === 'LEAF') {
           bus.$emit('employeeInfo',item)
-        } else if(this.treeType === 'turnOver') {
+        } else if(this.treeType === 'turnOver' && item.nodeType === 'LEAF') {
           bus.$emit('changeCode',item)
         }
       },300)
     },
     openSession(item) {
       clearTimeout(this.timer)
-      if(this.treeType === 'group') {
+      if(this.treeType === 'group' && item.nodeType !=="TOP") {
         bus.$emit('groupSession',item)
-      } else if(this.treeType === 'employee') {
+      } else if(this.treeType === 'employee' && item.nodeType === 'LEAF') {
         bus.$emit('employeeSession',item)
       }
     }
@@ -78,6 +78,15 @@ export default {
 }
 .cs-item:hover {
   background-color: rgb(217, 236, 255);
+}
+.cs-item-name {
+  display: inline-block;
+  width: calc(100% - 40px);
+  height: 100%;
+  line-height: 32px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .yc-down-arrow {
   float: right;

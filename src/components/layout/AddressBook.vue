@@ -1,7 +1,7 @@
 <template>
   <div class="yc-address-book">
     <div class="yc-top">
-      <span class="yc-add-group" @click="addGroup">+ 添加项目群</span>
+      <span class="yc-add-group" @click="addGroup">+ 添加群</span>
     </div>
     <contacts :treeData="filteredGroup" :onlineEmployees="onlineEmployees" :selectId="selectId" treeType="group"></contacts>
     <contacts :treeData="filteredContacts" :onlineEmployees="onlineEmployees" :selectId="selectId" treeType="employee"></contacts>
@@ -26,6 +26,9 @@ export default {
   },
   props: {
     userCode: String,
+    userName: String,
+    userCompany: String,
+    options: Object,
     isGroupInfo: Boolean,
     groupInfo: Object,
     onlineEmployees: Array,
@@ -91,6 +94,13 @@ export default {
         members: [],
         initName: '',
         initMembers: []
+      }
+      if(this.options.addOneself) {
+        data.members.push({
+          employeeCode: this.userCode,
+          employeeName: this.userName,
+          companyName: this.userCompany
+        })
       }
       this.$emit('changeGroupInfo',data)
     },

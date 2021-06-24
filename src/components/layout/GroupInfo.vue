@@ -1,8 +1,8 @@
 <template>
   <div class="im-group-info">
     <div class="yc-title">
-      <span>项目群名称：</span>
-      <input type="text" placeholder="请输入项目名称" v-model="groupInfo.name" :disabled="!groupInfo.isEdit">
+      <span>群名称：</span>
+      <input type="text" placeholder="请输入名称" v-model="groupInfo.name" :disabled="!groupInfo.isEdit">
     </div>
     <div class="yc-record">
       <span>已添加人员</span>
@@ -11,7 +11,7 @@
     <ul class="yc-content">
       <li class="yc-employee" v-for="item of groupInfo.members" :key="item.employeeCode">
         <span>{{item.employeeName}}</span>
-        <i class="yc-delete-icon im-iconfont im-icon-delete" v-show="groupInfo.isEdit" @click="delEmployee(item)" />
+        <i class="yc-delete-icon im-iconfont im-icon-delete" v-show="delIcon(item.employeeCode)" @click="delEmployee(item)" />
       </li>
     </ul>
     <div class="yc-bottom">
@@ -33,16 +33,15 @@ export default {
     }
   },
   props: {
-    groupInfo: {
-      type: Object
-    },
+    groupInfo: Object,
+    options: Object,
+    userCode: String
   },
   methods: {
     delEmployee(item) {
       this.$emit('delEmployee',item)
     },
     exit() {
-      console.log(this.groupInfo)
       let data = {
         isAdd: this.groupInfo.isAdd,
         isEdit: true,
@@ -84,6 +83,12 @@ export default {
     del() {
       this.delLoading = true
       this.$emit('delGroup')
+    },
+    delIcon(code) {
+      if(this.options.addOneself && this.userCode === code) {
+        return false
+      }
+      return this.groupInfo.isEdit
     }
   }
 }
@@ -134,7 +139,8 @@ export default {
   }
   .yc-employee {
     float: left;
-    width: 80px;
+    padding: 0 10px;
+    min-width: 80px;
     height: 20px;
     text-align: center;
     line-height: 20px;

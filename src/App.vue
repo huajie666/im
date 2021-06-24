@@ -5,7 +5,7 @@
       <el-button @click="isOpen = false">关闭窗口</el-button>
       <el-button @click="closeWebsocket">断开连接</el-button>
     </div>
-    <i-m ref="im" :isOpen="isOpen" :wsurl="wsurl" :userCode="userCode" :userName="userName" :userCompany="userCompany" :token="token" :sessionListApi="sessionList" :messageListApi="messageListApi" @closeSession="closeSession" />
+    <i-m ref="im" :isOpen="isOpen" :wsurl="wsurl" :userCode="userCode" :userName="userName" :userCompany="userCompany" :token="token" :options="options" :sessionListApi="sessionList" :messageListApi="messageListApi" @closeSession="closeSession" />
   </div>
 </template>
 
@@ -19,10 +19,13 @@ export default {
       userCode: '98F19003',
       userName: '王晓赛',
       userCompany: '石家庄',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyMzMwOTIzNDk3MSwiZXhwIjoxNjIzOTE0MDM0fQ.50Nnoh-cLmPzLNG2zO9oaN1e40qZwP5uLYG3J1FoseagFo1rabtWNh-Mc5eJ0Sn8QIyihkTipISFIF54cANEvg',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyNDUwNTQ5MzM0NywiZXhwIjoxNjI1MTEwMjkzfQ.CjAHCd5swzD2a3u4bdBrf6YsqK3C3NUtfRWYxRkMSImGb1rgrfFQm5cpep7ib5JRTH06PPZvoGswC1u4IURRPQ',
       requestProxy:'api/',
       sessionList: 'manage/im/session/search',
       messageListApi: 'im/message/search/offline/message',
+      options: {
+        addOneself: true,
+      }
     }
   },
   methods: {

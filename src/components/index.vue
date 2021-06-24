@@ -9,9 +9,9 @@
         <turn-over ref="turnOver" v-show="isShowGroupTurnOver" :isShowGroupTurnOver="isShowGroupTurnOver" :userName="userName" :userCompany="userCompany" @turnOver="turnOver"></turn-over>
       </div>
       <div v-show="!isSession">
-        <address-book ref="addressBook" :userCode="userCode" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :groupInfoApi="groupInfoApi" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @initiateChat="initiateChat" />
+        <address-book ref="addressBook" :userCode="userCode" :userName="userName" :userCompany="userCompany" :options="options" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :groupInfoApi="groupInfoApi" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @initiateChat="initiateChat" />
         <div class="im-info" v-if="isShowInfo">
-          <group-info ref="groupInfo" v-if="isGroupInfo" :groupInfo="groupInfo" @changeGroupInfo="changeGroupInfo" @hiddenInfo="hiddenInfo" @delEmployee="delEmployee" @saveGroup="saveGroup" @delGroup="delGroup" />
+          <group-info ref="groupInfo" v-if="isGroupInfo" :groupInfo="groupInfo" :userCode="userCode" :options="options" @changeGroupInfo="changeGroupInfo" @hiddenInfo="hiddenInfo" @delEmployee="delEmployee" @saveGroup="saveGroup" @delGroup="delGroup" />
           <employee-info v-else :employeeInfo="employeeInfo" :userCode="userCode" @initiateChat="initiateChat"></employee-info>  
         </div>
       </div>
@@ -50,6 +50,7 @@ export default {
     userName: String,
     userCompany: String,
     token: String,
+    options: Object,
     requestProxy: {
       type: String,
       default: 'api/'
@@ -197,7 +198,6 @@ export default {
     TurnOver
   },
   mounted() {
-    console.log('版本号：1.2.2')
     // 创建axios实例
     this.http = axios.create({
       timeout: 12000
@@ -297,7 +297,7 @@ export default {
     // 接收到的推送消息
     websocketonmessage(e) {
       let data = JSON.parse(e.data)
-      // console.log(data,'接收消息')
+      console.log(data,'接收消息')
       // 后台推送断开消息，不需要重连
       if(data.RepetitionLoggingIn && !onlineSimultaneously) {
         this.isReconnect = false
