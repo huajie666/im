@@ -848,6 +848,21 @@ export default {
     delGroup() {
       this.http.delete(`${this.requestProxy}${this.delGroupApi}/${this.$refs.addressBook.selectId}`).then(res=> {
         this.getGroup()
+        let exist = false
+        let delSessionId = ''
+        this.sessionList.forEach(item=>{
+          if(item.chatTarget === this.$refs.addressBook.selectId) {
+            exist= true
+            delSessionId = item.sessionId
+          }
+        })
+        if(exist) {
+          this.getSessionList()
+        }
+        if(delSessionId === this.currentSessionId) {
+          this.currentInfo.sessionName = ''
+          this.isShowGroupMembers = false
+        }
         this.$refs.addressBook.selectId = ''
         this.isShowInfo = false
         this.$refs.groupInfo.delLoading = false

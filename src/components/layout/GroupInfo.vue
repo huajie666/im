@@ -77,15 +77,21 @@ export default {
         this.$message.warning('群名称不能为空')
         return
       }
-      if(!this.groupInfo.members.length) {
-        this.$message.warning('群成员不能为空')
+      if(this.groupInfo.members.length < 2) {
+        this.$message.warning('群成员不能少于两人')
         return
       }
       this.$emit('saveGroup')
     },
     del() {
-      this.delLoading = true
-      this.$emit('delGroup')
+      this.$confirm('此操作将永久删除该群, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(()=>{
+        this.delLoading = true
+        this.$emit('delGroup')
+      }).catch(()=>{})
     },
     delIcon(code) {
       if(this.options.addOneself && this.userCode === code) {
