@@ -28,7 +28,10 @@ export default {
     userCode: String,
     userName: String,
     userCompany: String,
-    options: Object,
+    options: {
+      type: Object,
+      default: ()=>({})
+    },
     isGroupInfo: Boolean,
     groupInfo: Object,
     onlineEmployees: Array,

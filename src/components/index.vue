@@ -50,7 +50,10 @@ export default {
     userName: String,
     userCompany: String,
     token: String,
-    options: Object,
+    options: {
+      type: Object,
+      default: ()=>({})
+    },
     requestProxy: {
       type: String,
       default: 'api/'

@@ -34,7 +34,10 @@ export default {
   },
   props: {
     groupInfo: Object,
-    options: Object,
+    options: {
+      type: Object,
+      default: ()=>({})
+    },
     userCode: String
   },
   methods: {
