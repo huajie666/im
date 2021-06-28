@@ -12,7 +12,7 @@
         <address-book ref="addressBook" :userCode="userCode" :userName="userName" :userCompany="userCompany" :options="options" :isGroupInfo="isGroupInfo" :groupInfo="groupInfo" :onlineEmployees="onlineEmployees" :keyword="keyword" :http="http" :groupInfoApi="groupInfoApi" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @changeGroupInfo="changeGroupInfo" @changeEmployeeInfo="changeEmployeeInfo" @addEmployee="addEmployee" @initiateChat="initiateChat" />
         <div class="im-info" v-if="isShowInfo">
           <group-info ref="groupInfo" v-if="isGroupInfo" :groupInfo="groupInfo" :userCode="userCode" :options="options" @changeGroupInfo="changeGroupInfo" @hiddenInfo="hiddenInfo" @delEmployee="delEmployee" @saveGroup="saveGroup" @delGroup="delGroup" />
-          <employee-info v-else :employeeInfo="employeeInfo" :userCode="userCode" @initiateChat="initiateChat"></employee-info>  
+          <employee-info v-else :employeeInfo="employeeInfo" :userCode="userCode" @initiateChat="initiateChat"></employee-info>
         </div>
       </div>
     </div>
@@ -104,7 +104,7 @@ export default {
     },
     turnOverApi: {
       type: String,
-      default: 'im/message/trunover'
+      default: 'im/message/turnover'
     },
     uploadSize: {
       type: Number,
@@ -160,7 +160,7 @@ export default {
     return {
       http: null,
       keyword: '',
-      isSession: true, //是否会话页 false表示通讯录页面   
+      isSession: true, //是否会话页 false表示通讯录页面
       currentSessionId: '', //当前会话id
       sessionList: [], //会话列表
       messageList: [], //当前会话消息列表
@@ -173,7 +173,7 @@ export default {
       localData: {}, //已经获取的会话消息列表存储
       localInfo: {}, //已经获取的会话消息内容存储
       isShowInfo: false, //是否展示信息区
-      isGroupInfo: false, //当前选中的是否是群消息 
+      isGroupInfo: false, //当前选中的是否是群消息
       groupInfo: {}, //群信息
       employeeInfo: {}, //员工信息
       isReconnect: true, //是否需要重新连接
@@ -210,7 +210,7 @@ export default {
       config => {
         if (this.token) {
           config.headers['Authorization'] = this.token
-        } 
+        }
         return config
       },
       error => {
@@ -316,7 +316,7 @@ export default {
         if(data.content.type === 'USER_ONLINE') {
           this.onlineEmployees.push(data.from)
           return
-        } 
+        }
         // 关联员工下线
         if(data.content.type === 'USER_OFFLINE') {
           this.onlineEmployees.forEach((val, index) => {
@@ -754,7 +754,7 @@ export default {
         }
       })
     },
-    // 查看群成员 
+    // 查看群成员
     viewGroupMembers() {
       this.isShowGroupMembers = !this.isShowGroupMembers
     },
@@ -1007,7 +1007,7 @@ export default {
       if(this.viewer) {
         this.viewer.destroy()
       }
-      let index 
+      let index
       this.images.forEach((v, i) => {
         if (v === url) {
           index = i
@@ -1066,7 +1066,7 @@ export default {
     height: 600px;
     top: 15vh;
     left: 50%;
-    transform: translate(-50%); 
+    transform: translate(-50%);
     border-radius: 4px;
     box-shadow: 5px 5px 10px rgb(0 0 0 / 30%);
     background-color: #fff;
