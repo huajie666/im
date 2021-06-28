@@ -112,16 +112,26 @@ export default {
       this.selectId = id
       this.http.get(`${this.requestProxy}${this.groupInfoApi}/${id}`)
       .then(res=>{
-        let data = {
-          isAdd: false, //是否添加群状态
-          isEdit: false, //是否编辑群状态
-          id: res.data.data.id, //群id
-          name: res.data.data.groupName, //群名称
-          members: res.data.data.employeeList, //群成员列表
-          initName: res.data.data.groupName, //初始群名称
-          initMembers: JSON.parse(JSON.stringify(res.data.data.employeeList)) //初始群成员
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
         }
-        this.$emit('changeGroupInfo',data)
+        if(res.data.data) {
+          let data = {
+            isAdd: false, //是否添加群状态
+            isEdit: false, //是否编辑群状态
+            id: res.data.data.id, //群id
+            name: res.data.data.groupName, //群名称
+            members: res.data.data.employeeList, //群成员列表
+            initName: res.data.data.groupName, //初始群名称
+            initMembers: JSON.parse(JSON.stringify(res.data.data.employeeList)) //初始群成员
+          }
+          this.$emit('changeGroupInfo',data)
+        }
       })
     },
     // 获取员工信息
@@ -130,13 +140,31 @@ export default {
         this.selectId = item.id
         this.http.get(`${this.requestProxy}${this.groupMemberInfoApi}/${item.code}`)
         .then(res=>{
-          this.$emit('changeEmployeeInfo',res.data.data)
+          if(res.data.resultCode !== 0) {
+            if(res.data.resultMsg) {
+              this.$message.warning(res.data.resultMsg)
+              return
+            }
+            this.$message.warning('系统异常，请联系管理员！')
+            return
+          }
+          if(res.data.data) {
+            this.$emit('changeEmployeeInfo',res.data.data)
+          }
         })
       }
     },
     // 打开群会话窗口
     openGroupSession(item) {
       this.http.get(`${this.requestProxy}${this.groupInfoApi}/${item.id}`).then(res=>{
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
         if(res.data.data) {
           let isGroupMembers = res.data.data.employeeList.some(item1 => {
             return item1.employeeCode === this.userCode

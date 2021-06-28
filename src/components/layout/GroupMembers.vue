@@ -84,7 +84,17 @@ export default {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         this.http.get(`${this.requestProxy}${this.groupMemberInfoApi}/${item.employeeCode}`).then(res=>{
-          this.memberInfo = res.data.data
+          if(res.data.resultCode !== 0) {
+            if(res.data.resultMsg) {
+              this.$message.warning(res.data.resultMsg)
+              return
+            }
+            this.$message.warning('系统异常，请联系管理员！')
+            return
+          }
+          if(res.data.data) {
+            this.memberInfo = res.data.data
+          }
         })
       }, 300)
     },

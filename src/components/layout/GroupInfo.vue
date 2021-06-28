@@ -78,7 +78,11 @@ export default {
         return
       }
       if(this.groupInfo.members.length < 2) {
-        this.$message.warning('群成员不能少于两人')
+        if(this.groupInfo.isAdd) {
+          this.$message.warning('创建群时请添加至少两位成员。')
+        } else {
+          this.$message.warning('编辑群时请添加至少两位成员。')
+        }
         return
       }
       this.$emit('saveGroup')

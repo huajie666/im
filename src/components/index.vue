@@ -240,14 +240,24 @@ export default {
             sessionId: val,
           }
           this.http.post(this.requestProxy + this.messageListApi,data).then(res=>{
-            this.messageList = res.data.data.messageList
-            this.lastPageNum = res.data.data.lastPageNum
-            this.unreadNum = res.data.data.omCount
-            this.localInfo[val] = {
-              lastPageNum: res.data.data.lastPageNum,
-              unreadNum: res.data.data.omCount
+            if(res.data.resultCode !== 0) {
+              if(res.data.resultMsg) {
+                this.$message.warning(res.data.resultMsg)
+                return
+              }
+              this.$message.warning('系统异常，请联系管理员！')
+              return
             }
-            this.updateReadStatus()
+            if(res.data.data) {
+              this.messageList = res.data.data.messageList
+              this.lastPageNum = res.data.data.lastPageNum
+              this.unreadNum = res.data.data.omCount
+              this.localInfo[val] = {
+                lastPageNum: res.data.data.lastPageNum,
+                unreadNum: res.data.data.omCount
+              }
+              this.updateReadStatus()
+            }
           })
         }
       },
@@ -300,7 +310,7 @@ export default {
     // 接收到的推送消息
     websocketonmessage(e) {
       let data = JSON.parse(e.data)
-      console.log(data,'接收消息')
+      console.log(data,`${this.userName}接收消息`)
       // 后台推送断开消息，不需要重连
       if(data.RepetitionLoggingIn && !onlineSimultaneously) {
         this.isReconnect = false
@@ -334,8 +344,11 @@ export default {
       }
       // 刷新会话列表
       if(data.type === 'ACTION_RENEW_SESSION_LIST') {
+        if(data.sessionId === this.currentSessionId) {
+          this.currentInfo.sessionName = ''
+          this.isShowGroupTurnOver = false
+        }
         this.getSessionList()
-        return
       }
       if(data.sessionId) {
         let that = this
@@ -509,9 +522,19 @@ export default {
                 chatTarget: chatTarget
               }
               this.http.post(this.requestProxy + this.sessionListApi,params).then(res=>{
-                this.sessionList = res.data.data
-                if(data.type === 'PRIVATE'){
-                  this.employeesObj[data.from] = data.fromName
+                if(res.data.resultCode !== 0) {
+                  if(res.data.resultMsg) {
+                    this.$message.warning(res.data.resultMsg)
+                    return
+                  }
+                  this.$message.warning('系统异常，请联系管理员！')
+                  return
+                }
+                if(res.data.data) {
+                  this.sessionList = res.data.data
+                  if(data.type === 'PRIVATE'){
+                    this.employeesObj[data.from] = data.fromName
+                  }
                 }
               })
             }
@@ -583,6 +606,14 @@ export default {
         employeeCode: this.userCode
       }
       this.http.post(this.requestProxy + this.sessionListApi,data).then(res=>{
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
         if(res.data.data) {
           this.sessionList = res.data.data
           this.employeesObj[this.userCode] = this.userName
@@ -597,10 +628,20 @@ export default {
     // 获取群成员列表
     getGroupMembers(id) {
       this.http.get(`${this.requestProxy}${this.groupInfoApi}/${id}`).then(res=>{
-        this.groupMembers = res.data.data.employeeList
-        this.groupMembers.forEach(item => {
-          this.employeesObj[item.employeeCode] = item.employeeName
-        })
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
+        if(res.data.data) {
+          this.groupMembers = res.data.data.employeeList
+          this.groupMembers.forEach(item => {
+            this.employeesObj[item.employeeCode] = item.employeeName
+          })
+        }
       })
     },
     // 点击会话列表聊天
@@ -617,11 +658,21 @@ export default {
       }
       if(item.sessionType === 2){
         this.http.get(`${this.requestProxy}${this.groupInfoApi}/${item.chatTarget}`).then(res=>{
-          this.groupMembers = res.data.data.employeeList
-          this.groupMembers.forEach(obj => {
-            this.employeesObj[obj.employeeCode] = obj.employeeName
-            this.currentSessionId = item.sessionId
-          })
+          if(res.data.resultCode !== 0) {
+            if(res.data.resultMsg) {
+              this.$message.warning(res.data.resultMsg)
+              return
+            }
+            this.$message.warning('系统异常，请联系管理员！')
+            return
+          }
+          if(res.res.data.data) {
+            this.groupMembers = res.data.data.employeeList
+            this.groupMembers.forEach(obj => {
+              this.employeesObj[obj.employeeCode] = obj.employeeName
+              this.currentSessionId = item.sessionId
+            })
+          }
         })
       } else {
         this.currentSessionId = item.sessionId
@@ -655,6 +706,14 @@ export default {
           sessionType: obj.type
         }
         this.http.post(this.requestProxy + this.sessionListApi,data).then(res=>{
+          if(res.data.resultCode !== 0) {
+            if(res.data.resultMsg) {
+              this.$message.warning(res.data.resultMsg)
+              return
+            }
+            this.$message.warning('系统异常，请联系管理员！')
+            return
+          }
           if(res.data.data) {
             this.sessionList = res.data.data
             if(obj.type === 1) {
@@ -686,20 +745,30 @@ export default {
       let chatArea = document.getElementsByClassName("yc-content") //聊天区域
       let chatAreaScrollHeight = chatArea[0].scrollHeight
       this.http.post(this.requestProxy + this.messageListApi,data).then(res=>{
-        this.lastPageNum = res.data.data.lastPageNum
-        this.unreadNum = res.data.data.omCount
-        this.localInfo[this.currentSessionId] = {
-          lastPageNum: res.data.data.lastPageNum,
-          unreadNum: res.data.data.omCount
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
         }
-        if(type === '1') {
-          this.$refs.sessionMessage.loadMoreLoading = false
-          this.messageList = res.data.data.messageList.concat(this.messageList)
-          this.updateReadStatus(type,chatAreaScrollHeight)
-        } else {
-          this.$refs.sessionMessage.unreadLoading = false
-          this.messageList = res.data.data.messageList
-          this.updateReadStatus(type)
+        if(res.data.data) {
+          this.lastPageNum = res.data.data.lastPageNum
+          this.unreadNum = res.data.data.omCount
+          this.localInfo[this.currentSessionId] = {
+            lastPageNum: res.data.data.lastPageNum,
+            unreadNum: res.data.data.omCount
+          }
+          if(type === '1') {
+            this.$refs.sessionMessage.loadMoreLoading = false
+            this.messageList = res.data.data.messageList.concat(this.messageList)
+            this.updateReadStatus(type,chatAreaScrollHeight)
+          } else {
+            this.$refs.sessionMessage.unreadLoading = false
+            this.messageList = res.data.data.messageList
+            this.updateReadStatus(type)
+          }
         }
       }).catch(()=> {
         this.$refs.sessionMessage.loadMoreLoading = false
@@ -783,25 +852,55 @@ export default {
     // 获取群列表
     getGroup() {
       this.http.get(this.requestProxy + this.groupApi).then(res=>{
-        this.addIndex(res.data.data,1)
-        this.$refs.addressBook.groupList = res.data.data
-        this.$refs.addressBook.copyGroupList = JSON.parse(JSON.stringify(res.data.data))
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
+        if(res.data.data) {
+          this.addIndex(res.data.data,1)
+          this.$refs.addressBook.groupList = res.data.data
+          this.$refs.addressBook.copyGroupList = JSON.parse(JSON.stringify(res.data.data))
+        }
       })
     },
     // 获取联系人列表
     getContacts() {
       this.http.get(this.requestProxy + this.contactsApi).then(res=>{
-        this.addIndex(res.data.data,1)
-        this.$refs.addressBook.contactsList = res.data.data
-        this.$refs.addressBook.copyContactsList = JSON.parse(JSON.stringify(res.data.data))
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
+        if(res.data.data){
+          this.addIndex(res.data.data,1)
+          this.$refs.addressBook.contactsList = res.data.data
+          this.$refs.addressBook.copyContactsList = JSON.parse(JSON.stringify(res.data.data))
+        }
       })
     },
     // 获取移交人员列表
     getTurnOverContacts() {
       this.http.get(`${this.requestProxy}${this.contactsApi}/EMP`).then(res=>{
-        this.addIndex(res.data.data,1)
-        this.$refs.turnOver.turnOverContacts = res.data.data
-        this.$refs.turnOver.copyTurnOverContacts = JSON.parse(JSON.stringify(res.data.data))
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
+        if(res.data.data) {
+          this.addIndex(res.data.data,1)
+          this.$refs.turnOver.turnOverContacts = res.data.data
+          this.$refs.turnOver.copyTurnOverContacts = JSON.parse(JSON.stringify(res.data.data))
+        }
       })
     },
     // 更新群信息
@@ -824,21 +923,41 @@ export default {
       }
       if(this.groupInfo.isAdd) {
         this.http.post(this.requestProxy + this.addGroupApi,data).then(res=>{
-          this.groupInfo.isAdd = false
-          this.groupInfo.isEdit = false
-          this.groupInfo.id = res.data.data.id
-          this.$refs.groupInfo.saveLoading = false
-          this.$refs.addressBook.selectId = res.data.data.id
-          this.$message.success('添加群成功')
+          if(res.data.resultCode !== 0) {
+            if(res.data.resultMsg) {
+              this.$message.warning(res.data.resultMsg)
+              return
+            }
+            this.$message.warning('系统异常，请联系管理员！')
+            return
+          }
+          if(res.data.data) {
+            this.groupInfo.isAdd = false
+            this.groupInfo.isEdit = false
+            this.groupInfo.id = res.data.data.id
+            this.$refs.groupInfo.saveLoading = false
+            this.$refs.addressBook.selectId = res.data.data.id
+            this.$message.success('添加群成功')
+          }
         }).catch(()=>{
           this.$refs.groupInfo.saveLoading = false
         })
       } else {
         data.id = this.$refs.addressBook.selectId
         this.http.post(this.requestProxy + this.editGroupApi,data).then(res=>{
-          this.groupInfo.isEdit = false
-          this.$refs.groupInfo.saveLoading = false
-          this.$message.success('保存群成功')
+          if(res.data.resultCode !== 0) {
+            if(res.data.resultMsg) {
+              this.$message.warning(res.data.resultMsg)
+              return
+            }
+            this.$message.warning('系统异常，请联系管理员！')
+            return
+          }
+          if(res.data.data) {
+            this.groupInfo.isEdit = false
+            this.$refs.groupInfo.saveLoading = false
+            this.$message.success('保存群成功')
+          }
         }).catch(()=>{
           this.$refs.groupInfo.saveLoading = false
         })
@@ -847,6 +966,14 @@ export default {
     // 删除群
     delGroup() {
       this.http.delete(`${this.requestProxy}${this.delGroupApi}/${this.$refs.addressBook.selectId}`).then(res=> {
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
         this.getGroup()
         let exist = false
         let delSessionId = ''
@@ -1000,6 +1127,14 @@ export default {
         employeeCode: this.userCode
       }
       this.http.post(this.requestProxy + this.stickApi,data).then(res=>{
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
         this.getSessionList()
       })
     },
@@ -1042,6 +1177,14 @@ export default {
     // 移交会话
     turnOver(code) {
       this.http.patch(`${this.requestProxy}${this.turnOverApi}/${this.currentSessionId}/${this.userCode}/${code}`).then(res=>{
+        if(res.data.resultCode !== 0) {
+          if(res.data.resultMsg) {
+            this.$message.warning(res.data.resultMsg)
+            return
+          }
+          this.$message.warning('系统异常，请联系管理员！')
+          return
+        }
         this.$message.success('会话移交成功')
       })
     }
