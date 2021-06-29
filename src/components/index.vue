@@ -113,10 +113,6 @@ export default {
     uploadType: {
       type: String,
       default: ''
-    },
-    onlineSimultaneously: {
-      type: Boolean,
-      default: true
     }
   },
   directives: {
@@ -176,7 +172,6 @@ export default {
       isGroupInfo: false, //当前选中的是否是群消息
       groupInfo: {}, //群信息
       employeeInfo: {}, //员工信息
-      isReconnect: true, //是否需要重新连接
       groupMembers: [], //群成员列表
       isShowGroupMembers: false, //是否显示群成员列表
       isShowGroupTurnOver: false, // 是否显示移交列表
@@ -187,7 +182,10 @@ export default {
       stickTop: 0,
       isStick: false,
       images: [],
-      viewer: null
+      viewer: null,
+      isReconnect: true, //是否需要重新连接
+      reconnectionTimer: null, 
+      reconnectionCount: 'infinite', // 需要重连次数,默认一直重连。
     }
   },
   components: {
@@ -223,8 +221,17 @@ export default {
     this.getContacts()
     this.getTurnOverContacts()
   },
+  created() {
+    // 设置连接断开重连次数
+    if(this.options.reconnectionCount) {
+      this.reconnectionCount = this.options.reconnectionCount
+    }
+  },
   beforeDestroy() {
     this.closeWebsocket()
+    if(this.reconnectionTimer) {
+      clearTimeout(this.reconnectionTimer)
+    }
   },
   watch: {
     currentSessionId: {
@@ -306,13 +313,17 @@ export default {
     // 连接成功
     websocketonopen() {
       console.log('---连接成功')
+      if(this.reconnectionTimer) {
+        clearTimeout(this.reconnectionTimer)
+        this.reconnectionCount = this.options.reconnectionCount
+      }
     },
     // 接收到的推送消息
     websocketonmessage(e) {
       let data = JSON.parse(e.data)
       console.log(data,`${this.userName}接收的推送消息`)
       // 后台推送断开消息，不需要重连
-      if(data.RepetitionLoggingIn && !this.onlineSimultaneously) {
+      if(data.RepetitionLoggingIn) {
         this.isReconnect = false
         return
       }
@@ -584,9 +595,23 @@ export default {
     // 连接断开
     websocketclose() {
       console.log('---连接断开')
+      if(this.reconnectionTimer) {
+        clearTimeout(this.reconnectionTimer)
+      }
+      if(this.isReconnect) {
+        if(this.options.reconnectionCount) {
+          if(this.reconnectionCount > 0) {
+            this.reconnectionCount--
+            this.reconnectionTimer = setTimeout(this.initWebSocket(),3000)
+          }
+          return
+        }
+        this.reconnectionTimer = setTimeout(this.initWebSocket(),3000)
+      }
     },
     // 关闭websocket
     closeWebsocket() {
+      this.isReconnect = true
       this.webscoket.close()
     },
     // 查询关键字改变
