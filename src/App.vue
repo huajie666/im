@@ -1,15 +1,11 @@
 <template>
   <div id="app">
     <div class="but-control">
-      <el-button @click="isOpen = true">打开窗口1</el-button>
-      <el-button @click="isOpen = false">关闭窗口1</el-button>
-      <el-button @click="isOpen1 = true">打开窗口2</el-button>
-      <el-button @click="isOpen1 = false">关闭窗口2</el-button>
+      <el-button @click="isOpen = true">打开窗口</el-button>
+      <el-button @click="isOpen = false">关闭窗口</el-button>
       <el-button @click="closeWebsocket">断开连接</el-button>
     </div>
     <i-m ref="im" :isOpen="isOpen" :wsurl="wsurl" :userCode="userCode" :userName="userName" :userCompany="userCompany" :token="token" :options="options" :sessionListApi="sessionList" :messageListApi="messageListApi" @closeSession="closeSession" />
-
-    <i-m ref="im1" :isOpen="isOpen1" :wsurl="wsurl1" :userCode="userCode1" :userName="userName1" :userCompany="userCompany1" :token="token1" @closeSession="closeSession" />
   </div>
 </template>
 
@@ -28,25 +24,17 @@ export default {
       sessionList: 'manage/im/session/search',
       messageListApi: 'im/message/search/offline/message',
       options: {
-        addOneself: true,
+        addOneself: true, // 添加群时是否自动添加本人,默认不添加。
+        reconnectionCount: 3, // 非主动断开连接时重连次数,默认一直重连。
       },
-      // 聊天窗口2参数
-      isOpen1: false,
-      wsurl1: 'ws://192.168.101.27:8081/chat/98F19004?DEVICE=WEB',
-      userCode1: '98F19004',
-      userName1: '胡安',
-      userCompany1: '石家庄',
-      token1: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwNCIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyNDg3MjIzNzI3NywiZXhwIjoxNjI1NDc3MDM3fQ.xxJEGGeS1VXngX7R1ddazX2XkEj7o5hmTz__WIgzI4217iP8q7vKXobkXdOE50pIKMMVLCNATdihGwvZE5VPww'
     }
   },
   methods: {
     closeSession(val) {
       this.isOpen = val
-      this.isOpen1 = val
     },
     closeWebsocket() {
       this.$refs.im.closeWebsocket()
-      this.$refs.im1.closeWebsocket()
     }
   }
 }

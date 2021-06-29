@@ -90,6 +90,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import moment from 'moment'
 import { twoSurname } from './../../utils/common'
 export default {
@@ -186,8 +187,12 @@ export default {
       let str = item.content.file.name
       let index = str.lastIndexOf('\.')
       let name = str.substring(0,index)
-      let url = item.content.file.url;
-      window.open(`${url}?displayName=${name}`, "_self");
+      let url = item.content.file.url
+      this.axios({ url: `${url}?displayName=${name}`}).then(res=>{
+        window.open(`${url}?displayName=${name}`, "_self")
+      }).catch(()=>{
+        this.$message.warning('文件已过期')
+      })
     },
     fileAdded(file, event) {
       if(file.size > this.uploadSize * 1024000) {

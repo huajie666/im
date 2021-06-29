@@ -310,13 +310,13 @@ export default {
     // 接收到的推送消息
     websocketonmessage(e) {
       let data = JSON.parse(e.data)
-      console.log(data,`${this.userName}接收消息`)
+      console.log(data,`${this.userName}接收的推送消息`)
       // 后台推送断开消息，不需要重连
-      if(data.RepetitionLoggingIn && !onlineSimultaneously) {
+      if(data.RepetitionLoggingIn && !this.onlineSimultaneously) {
         this.isReconnect = false
         return
       }
-      // 获取在线员工
+      // 关联员工在线推送
       if(data.type === 'ONLINE_EMPLOYEES') {
         this.onlineEmployees = data.content.onlineEmployees
         return
@@ -337,18 +337,20 @@ export default {
           return
         }
       }
-      // 关联群变化
+      // 关联群推送
       if(data.type === 'GROUP_UPDATE_STATUS') {
         this.getGroup()
+        this.getSessionList()
         return
       }
-      // 刷新会话列表
+      // 关联移交推送
       if(data.type === 'ACTION_RENEW_SESSION_LIST') {
         if(data.sessionId === this.currentSessionId) {
           this.currentInfo.sessionName = ''
           this.isShowGroupTurnOver = false
         }
         this.getSessionList()
+        return
       }
       if(data.sessionId) {
         let that = this
@@ -666,7 +668,7 @@ export default {
             this.$message.warning('系统异常，请联系管理员！')
             return
           }
-          if(res.res.data.data) {
+          if(res.data.data) {
             this.groupMembers = res.data.data.employeeList
             this.groupMembers.forEach(obj => {
               this.employeesObj[obj.employeeCode] = obj.employeeName
@@ -924,6 +926,7 @@ export default {
       if(this.groupInfo.isAdd) {
         this.http.post(this.requestProxy + this.addGroupApi,data).then(res=>{
           if(res.data.resultCode !== 0) {
+            this.$refs.groupInfo.saveLoading = false
             if(res.data.resultMsg) {
               this.$message.warning(res.data.resultMsg)
               return
