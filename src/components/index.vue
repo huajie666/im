@@ -256,6 +256,13 @@ export default {
               return
             }
             if(res.data.data) {
+              res.data.data.messageList.forEach(item=>{
+                if(item.turnoverMessage) {
+                  if(!this.employeesObj.hasOwnProperty(item.from)){
+                    this.employeesObj[item.from] = item.content.fromName
+                  }
+                }
+              })
               this.messageList = res.data.data.messageList
               this.lastPageNum = res.data.data.lastPageNum
               this.unreadNum = res.data.data.omCount
@@ -312,7 +319,7 @@ export default {
     },
     // 连接成功
     websocketonopen() {
-      console.log('---连接成功')
+      // console.log('---连接成功')
       if(this.reconnectionTimer) {
         clearTimeout(this.reconnectionTimer)
         this.reconnectionCount = this.options.reconnectionCount
@@ -321,7 +328,7 @@ export default {
     // 接收到的推送消息
     websocketonmessage(e) {
       let data = JSON.parse(e.data)
-      console.log(data,`${this.userName}接收的推送消息`)
+      // console.log(data,`${this.userName}接收的推送消息`)
       // 后台推送断开消息，不需要重连
       if(data.RepetitionLoggingIn) {
         this.isReconnect = false
@@ -594,7 +601,7 @@ export default {
     },
     // 连接断开
     websocketclose() {
-      console.log('---连接断开')
+      // console.log('---连接断开',this.isReconnect)
       if(this.reconnectionTimer) {
         clearTimeout(this.reconnectionTimer)
       }
@@ -781,6 +788,13 @@ export default {
           return
         }
         if(res.data.data) {
+          res.data.data.messageList.forEach(item=>{
+            if(item.turnoverMessage) {
+              if(!this.employeesObj.hasOwnProperty(item.from)){
+                this.employeesObj[item.from] = item.content.fromName
+              }
+            }
+          })
           this.lastPageNum = res.data.data.lastPageNum
           this.unreadNum = res.data.data.omCount
           this.localInfo[this.currentSessionId] = {
@@ -1204,7 +1218,11 @@ export default {
     },
     // 移交会话
     turnOver(code) {
-      this.http.patch(`${this.requestProxy}${this.turnOverApi}/${this.currentSessionId}/${this.userCode}/${code}`).then(res=>{
+      let data = {
+        fromUserName: this.userName,
+        toUserName: ''
+      }
+      this.http.patch(`${this.requestProxy}${this.turnOverApi}/${this.currentSessionId}/${this.userCode}/${code}`,data).then(res=>{
         if(res.data.resultCode !== 0) {
           if(res.data.resultMsg) {
             this.$message.warning(res.data.resultMsg)

@@ -4,8 +4,26 @@
       <el-button @click="isOpen = true">打开窗口</el-button>
       <el-button @click="isOpen = false">关闭窗口</el-button>
       <el-button @click="closeWebsocket">断开连接</el-button>
+      <el-button @click="switchAccount">切换账号</el-button>
     </div>
-    <i-m ref="im" :isOpen="isOpen" :wsurl="wsurl" :userCode="userCode" :userName="userName" :userCompany="userCompany" :token="token" :options="options" :sessionListApi="sessionList" :messageListApi="messageListApi" @closeSession="closeSession" />
+    <el-form v-model="form" :inline="true" style="padding-left: 20px">
+      <el-form-item label="登录者code">
+        <el-input v-model="form.userCode" size="mini" />
+      </el-form-item>
+      <el-form-item label="登录者name">
+        <el-input v-model="form.userName" size="mini" />
+      </el-form-item>
+      <el-form-item label="登录者company">
+        <el-input v-model="form.userCompany" size="mini" />
+      </el-form-item>
+      <el-form-item label="登录者wsurl">
+        <el-input v-model="form.wsurl" size="mini" style="width: 350px" />
+      </el-form-item>
+      <el-form-item label="登录者token">
+        <el-input v-model="form.token" size="mini" style="width: 350px" />
+      </el-form-item>
+    </el-form>
+    <i-m ref="im" v-if="isCreated" :isOpen="isOpen" :wsurl="wsurl" :userCode="userCode" :userName="userName" :userCompany="userCompany" :token="token" :options="options"  @closeSession="closeSession" />
   </div>
 </template>
 
@@ -20,14 +38,26 @@ export default {
       userName: '王晓赛',
       userCompany: '石家庄',
       token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyNDUwNTQ5MzM0NywiZXhwIjoxNjI1MTEwMjkzfQ.CjAHCd5swzD2a3u4bdBrf6YsqK3C3NUtfRWYxRkMSImGb1rgrfFQm5cpep7ib5JRTH06PPZvoGswC1u4IURRPQ',
-      requestProxy:'api/',
-      sessionList: 'manage/im/session/search',
-      messageListApi: 'im/message/search/offline/message',
       options: {
         addOneself: true, // 添加群时是否自动添加本人,默认不添加。
-        reconnectionCount: 3, // 非主动断开连接时重连次数,默认一直重连。
+        // reconnectionCount: 3, // 非主动断开连接时重连次数,默认一直重连。
       },
+      isCreated: true,
+      form: {
+        userCode: '',
+        userName: '',
+        userCompany: '',
+        wsurl: '',
+        token: ''
+      }
     }
+  },
+  created() {
+    this.form.userCode = this.userCode
+    this.form.userName = this.userName
+    this.form.userCompany = this.userCompany
+    this.form.wsurl = this.wsurl
+    this.form.token = this.token
   },
   methods: {
     closeSession(val) {
@@ -35,6 +65,17 @@ export default {
     },
     closeWebsocket() {
       this.$refs.im.closeWebsocket()
+    },
+    switchAccount() {
+      this.isCreated= false
+      this.userCode = this.form.userCode
+      this.userName = this.form.userName
+      this.userCompany = this.form.userCompany
+      this.wsurl = this.form.wsurl
+      this.token = this.form.token
+      this.$nextTick(()=>{
+        this.isCreated= true
+      })
     }
   }
 }
