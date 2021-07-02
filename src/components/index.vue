@@ -186,6 +186,11 @@ export default {
       isReconnect: true, //是否需要重新连接
       reconnectionTimer: null, 
       reconnectionCount: 'infinite', // 需要重连次数,默认一直重连。
+      windowHidden: false, //浏览器页面是否隐藏
+      defaultTitle: '', //当前页面默认title
+      titleTwinkleTimer: null, //title闪烁定时器 
+      browserNotice: false, //浏览器通知
+      notification: null, //浏览器系统通知
     }
   },
   components: {
@@ -222,10 +227,24 @@ export default {
     this.getTurnOverContacts()
   },
   created() {
+    this.defaultTitle = document.title
+    // 判断浏览器标签页显示隐藏
+    document.addEventListener('visibilitychange',()=>{
+      this.windowHidden = document.hidden
+    })
     // 设置连接断开重连次数
     if(this.options.reconnectionCount) {
       this.reconnectionCount = this.options.reconnectionCount
     }
+    if(!window.Notification) {
+      this.$message.warning('浏览器不支持系统通知!')
+      return
+    }
+    if(Notification.permission !== 'granted') {
+      this.$message.warning('请授权浏览器允许通知')
+      return
+    }
+    this.browserNotice = true
   },
   beforeDestroy() {
     this.closeWebsocket()
@@ -306,6 +325,15 @@ export default {
       } else {
         document.body.removeEventListener("click", this.closeStick);
       }
+    },
+    windowHidden: {
+      handler(val){
+        // 聊天窗口存在标签页时取消title闪烁
+        if(!val){
+          clearInterval(this.titleTwinkleTimer)
+          document.title = this.defaultTitle
+        }
+      }
     }
   },
   methods: {
@@ -319,7 +347,7 @@ export default {
     },
     // 连接成功
     websocketonopen() {
-      // console.log('---连接成功')
+      console.log('---连接成功')
       if(this.reconnectionTimer) {
         clearTimeout(this.reconnectionTimer)
         this.reconnectionCount = this.options.reconnectionCount
@@ -328,7 +356,7 @@ export default {
     // 接收到的推送消息
     websocketonmessage(e) {
       let data = JSON.parse(e.data)
-      // console.log(data,`${this.userName}接收的推送消息`)
+      console.log(data,`${this.userName}接收的推送消息`)
       // 后台推送断开消息，不需要重连
       if(data.RepetitionLoggingIn) {
         this.isReconnect = false
@@ -372,6 +400,17 @@ export default {
       }
       if(data.sessionId) {
         let that = this
+        // 接收新消息并且tab页隐藏时title闪烁
+        if((data.type === 'PRIVATE' || data.type === 'GROUP') && this.windowHidden){
+          clearInterval(this.titleTwinkleTimer)
+          this.titleTwinkle()
+          if(this.browserNotice) {
+            this.notification = new Notification('聊天', {
+              body: '收到新消息',
+              timestamp: 3000
+            })
+          }
+        }
         // 推送消息是否为当前聊天消息
         if(data.sessionId === this.currentSessionId) {
           // 收到个人聊天消息和群消息
@@ -601,7 +640,7 @@ export default {
     },
     // 连接断开
     websocketclose() {
-      // console.log('---连接断开',this.isReconnect)
+      console.log('---连接断开')
       if(this.reconnectionTimer) {
         clearTimeout(this.reconnectionTimer)
       }
@@ -1233,6 +1272,19 @@ export default {
         }
         this.$message.success('会话移交成功')
       })
+    },
+    // title闪烁
+    titleTwinkle() {
+      let twinkle = true
+      this.titleTwinkleTimer = setInterval(()=>{
+        if(twinkle) {
+          twinkle = false
+          document.title = `${this.defaultTitle}【新消息】`
+        } else {
+          twinkle = true
+          document.title = this.defaultTitle
+        }
+      }, 500)
     }
   }
 }
