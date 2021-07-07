@@ -195,7 +195,7 @@ export default {
       })
     },
     fileAdded(file, event) {
-      if(file.size > this.uploadSize * 1024000) {
+      if(file.size > this.uploadSize * 1024 * 1024) {
         file.paused = true
         this.$message.warning(`上传文件不能大于${this.uploadSize}M`)
         return
