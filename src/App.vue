@@ -37,7 +37,7 @@ export default {
       userCode: '98F19003',
       userName: '王晓赛',
       userCompany: '石家庄',
-      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyNTE5MDE3MTgxMSwiZXhwIjoxNjI1Nzk0OTcxfQ.E8t1m29qH7ESJmckS8X6M7XIoTNvu73z0dk7jmtuIPh8fbyW-c20_W5owzQOBePdWY_Zj9ExZvjMXYq8bciQXQ',
+      token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OEYxOTAwMyIsImF1ZGllbmNlIjoid2ViIiwiY3JlYXRlZCI6MTYyNTcyMTM1MjkzMSwiZXhwIjoxNjI2MzI2MTUyfQ.u2Bd6X1agMvl58ZP0hViS5aYjzcforq9_PjK_vvzFGYfPm26XaFYkGTxZBlKYuX126dPIdQuYCftW78rvNuNbg',
       options: {
         addOneself: true, // 添加群时是否自动添加本人,默认不添加。
         // reconnectionCount: 3, // 非主动断开连接时重连次数,默认一直重连。

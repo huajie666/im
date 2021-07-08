@@ -188,7 +188,7 @@ export default {
       let index = str.lastIndexOf('\.')
       let name = str.substring(0,index)
       let url = item.content.file.url
-      this.axios({ url: `${url}?displayName=${name}`}).then(res=>{
+      axios({ url: `${url}?displayName=${name}`}).then(res=>{
         window.open(`${url}?displayName=${name}`, "_self")
       }).catch(()=>{
         this.$message.warning('文件已过期')
@@ -208,7 +208,6 @@ export default {
       })
     },
     fileSuccess(rootFile, file, message, chunk) {
-      console.log(this.options.target)
       this.isShowProgressBar = false
       if (message) {
         let messageJson = JSON.parse(message)
