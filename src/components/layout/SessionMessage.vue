@@ -90,7 +90,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
 import { twoSurname } from './../../utils/common'
 export default {
@@ -143,10 +142,7 @@ export default {
       type: String,
       default : 'api/'
     },
-    uploadingApi: {
-      type: String,
-      default: 'storage/file'
-    },
+    uploadingApi: String,
     uploadSize: {
       type: Number,
       default: 20
@@ -154,7 +150,13 @@ export default {
     uploadType: {
       type: String,
       default: ''
-    }
+    },
+    http: {},
+    requestProxy: {
+      type: String,
+      default : 'api/'
+    },
+    verifyDownloadApi: String,
   },
   methods: {
     viewGroupMembers() {
@@ -188,10 +190,15 @@ export default {
       let index = str.lastIndexOf('\.')
       let name = str.substring(0,index)
       let url = item.content.file.url
-      axios({ url: `${url}?displayName=${name}`}).then(res=>{
-        window.open(`${url}?displayName=${name}`, "_self")
-      }).catch(()=>{
-        this.$message.warning('文件已过期')
+      let param = {
+        filePath: `${url}?displayName=${name}`
+      }
+      this.http.put(`${this.requestProxy}${this.verifyDownloadApi}`,param).then(res=>{
+        if(res.data) {
+          window.open(`${url}?displayName=${name}`, "_self")
+        } else {
+          this.$message.warning('文件已过期')
+        }
       })
     },
     fileAdded(file, event) {

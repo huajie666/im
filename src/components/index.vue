@@ -4,7 +4,7 @@
       <session-header :isSession="isSession" :isShowGroupMembers="isShowGroupMembers" :isShowGroupTurnOver="isShowGroupTurnOver" @changeKeyword="changeKeyword" @changeSessionPage="changeSessionPage" @closeSession="closeSession"></session-header>
       <div v-show="isSession">
         <session-list :keyword="keyword" :currentSessionId="currentSessionId" :sessionList="sessionList" :onlineEmployees="onlineEmployees" @chat="chat" @stick="stick"></session-list>
-        <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :requestProxy="requestProxy" :uploadingApi="uploadingApi" :uploadSize="uploadSize" :uploadType="uploadType" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @unfoldTurnOver="unfoldTurnOver" @sendMessage="sendMessage" @previewImg="previewImg" @createGroup="createGroup"></session-message>
+        <session-message ref="sessionMessage" v-show="currentInfo.sessionName" :userCode="userCode" :currentInfo="currentInfo" :employeesObj="employeesObj" :messageList="messageList" :lastPageNum="lastPageNum" :unreadNum="unreadNum" :newMessage="newMessage" :onlineEmployees="onlineEmployees" :currentSessionId="currentSessionId" :requestProxy="requestProxy" :uploadingApi="uploadingApi" :uploadSize="uploadSize" :uploadType="uploadType" :http="http" :verifyDownloadApi="verifyDownloadApi" @loadMore="loadMore" @viewNewMessage="viewNewMessage" @viewGroupMembers="viewGroupMembers" @unfoldTurnOver="unfoldTurnOver" @sendMessage="sendMessage" @previewImg="previewImg" @createGroup="createGroup"></session-message>
         <group-members v-show="isShowGroupMembers" :isShowGroupMembers="isShowGroupMembers" :groupMembers="groupMembers" :onlineEmployees="onlineEmployees" :userCode="userCode" :http="http" :requestProxy="requestProxy" :groupMemberInfoApi="groupMemberInfoApi" @initiateChat="initiateChat"></group-members>
         <turn-over ref="turnOver" v-show="isShowGroupTurnOver" :isShowGroupTurnOver="isShowGroupTurnOver" :userName="userName" :userCompany="userCompany" @turnOver="turnOver"></turn-over>
       </div>
@@ -105,6 +105,10 @@ export default {
     turnOverApi: {
       type: String,
       default: 'im/message/turnover'
+    },
+    verifyDownloadApi: {
+      type: String,
+      default: 'im/file/check'
     },
     uploadSize: {
       type: Number,
