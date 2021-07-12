@@ -41,6 +41,7 @@ export default {
       options: {
         addOneself: true, // 添加群时是否自动添加本人,默认不添加。
         // reconnectionCount: 3, // 非主动断开连接时重连次数,默认一直重连。
+        userType: 'collect'
       },
       isCreated: true,
       form: {

@@ -218,6 +218,9 @@ export default {
         if (this.token) {
           config.headers['Authorization'] = this.token
         }
+        if(this.options.userType) {
+          config.headers['userType'] = this.options.userType
+        }
         return config
       },
       error => {
