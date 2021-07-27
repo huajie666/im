@@ -1128,7 +1128,7 @@ export default {
       let newMessage = {
         sessionId: this.currentSessionId,
         type: sessionType,
-        fromName: this.currentInfo.sessionName,
+        fromName: this.userName,
         from: this.userCode,
         to: this.currentInfo.chatTarget,
         timestamp: new Date().getTime(),
