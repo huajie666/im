@@ -487,7 +487,7 @@ export default {
                 }
                 this.newNotify = this.$notify.info({
                   title: "消息",
-                  message: `<p class="im-notify">${data.fromName}:${messageContent}</p>`,
+                  message: `<p class="im-notify">${data.sessionName}:${messageContent}</p>`,
                   dangerouslyUseHTMLString: true,
                   duration: 2000,
                   onClick() {
@@ -546,7 +546,7 @@ export default {
               }
               this.newNotify = this.$notify.info({
                 title: "消息",
-                message: `<p class="im-notify">${data.fromName}:${messageContent}</p>`,
+                message: `<p class="im-notify">${data.sessionName}:${messageContent}</p>`,
                 dangerouslyUseHTMLString: true,
                 duration: 2000,
                 onClick() {
@@ -1130,6 +1130,7 @@ export default {
         type: sessionType,
         fromName: this.userName,
         from: this.userCode,
+        sessionName: this.currentInfo.sessionName,
         to: this.currentInfo.chatTarget,
         timestamp: new Date().getTime(),
         content: {
